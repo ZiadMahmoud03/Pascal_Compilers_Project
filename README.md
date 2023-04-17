@@ -1,1 +1,2 @@
 # Pascal_Compilers_Project
+This is a project for the Design of Compilers course. The goal for this project is to create a lexical and synatx analyser for Pascal, which is an imperative and procedural programming language. For the scanner we will design a DFA for valid tokens, this DFA will be implemented and visualised using python. For the parser we will design a grammar for the programming langauge, it will be implemented using pyhton and a tree will be used to visualise the output of the parser.
