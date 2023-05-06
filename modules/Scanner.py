@@ -170,42 +170,37 @@ Tokens = []  # to add tokens to list
 
 
 def find_token(text):
-    part = text.split()
     result = ""
+    tokens = re.findall('\w+|[\.\;\:\=\+\-\*\/\<\>\(\)\{\}\']', text)
 
-    for i in part:
-        if i in ReservedWords:
-            t = token(i, ReservedWords[i])
-            result += f"{i}: {ReservedWords[i]}\n"
+    for t in tokens:
+        if t in ReservedWords:
+            token_type = ReservedWords[t.upper()]
+            result += f"{t}: {token_type}\n"
+        elif t in ArithmeticOperators:
+            token_type = ArithmeticOperators[t]
+            result += f"{t}: {token_type}\n"
+        elif t in RelationalOperators:
+            token_type = RelationalOperators[t]
+            result += f"{t}: {token_type}\n"
+        elif t in Comments:
+            token_type = Comments[t]
+            result += f"{t}: {token_type}\n"
+        elif t in Constants:
+            token_type = Constants[t.upper()]
+            result += f"{t}: {token_type}\n"
+        elif re.match("^[a-zA-Z][a-zA-Z0-9]*$", t):
+            token_type = Token_type.Identifier
+            result += f"{t}: {token_type}\n"
+        elif re.match("[-+]?\d+(\.\d+)?([eE][-+]?\d+)?", t):
+            token_type = Token_type.Number
+            result += f"{t}: {token_type}\n"
 
-        elif i in ArithmeticOperators:
-            t = token(i, ArithmeticOperators[i])
-            result += f"{i}: {ArithmeticOperators[i]}\n"
-
-        elif i in RelationalOperators:
-            t = token(i, RelationalOperators[i])
-            result += f"{i}: {RelationalOperators[i]} \n"
-
-        elif i in Comments:
-            t = token(i, Comments[i])
-            result += f"{i}: {Comments[i]} \n"
-
-        elif i in Constants:
-            t = token(i, Constants[i])
-            result += f"{i}: {Constants[i]} \n"
-
-        elif re.match("^[a-zA-Z][a-zA-Z0-9]*$", i):
-            t = token(i, Token_type.Identifier)
-            result += f"{i}: {Token_type.Identifier}\n"
-
-        elif re.match("[-+]?\d+(\.\d+)?([eE][-+]?\d+)?",i):
-            t = token(i,Token_type.Number)
-            result += f"{i}: {Token_type.Number}\n"
     print(result)
 
 
 def scan():
-    x1 = "Program  { X } = 5 THEN Y = 2 ;"
+    x1 = "Program  {X} = 5 THEN Y = 2;"
     uppercase_text = x1.upper()
     find_token(uppercase_text)
     df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
