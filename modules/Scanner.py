@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[49]:
-
 import tkinter as tk
 from enum import Enum
 import re
@@ -199,12 +194,39 @@ def find_token(text):
     print(result)
 
 
+root = tk.Tk()
+
+canvas1 = tk.Canvas(root, width=400, height=300, relief="raised")
+canvas1.pack()
+
+label1 = tk.Label(root, text="Scanner Phase")
+label1.config(font=("helvetica", 14))
+canvas1.create_window(200, 25, window=label1)
+
+label2 = tk.Label(root, text="Source code:")
+label2.config(font=("helvetica", 10))
+canvas1.create_window(200, 100, window=label2)
+
+entry1 = tk.Entry(root)
+canvas1.create_window(200, 140, window=entry1)
+
+
 def scan():
-    x1 = "Program  {X} = 5 THEN Y = 2;"
+    x1 = entry1.get()
     uppercase_text = x1.upper()
     find_token(uppercase_text)
     df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
     print(df)
+    label3 = tk.Label(root, text="Lexem " + x1 + " is:", font=("helvetica", 10))
+    canvas1.create_window(200, 210, window=label3)
+
+    label4 = tk.Label(root, text="Token_type" + x1, font=("helvetica", 10, "bold"))
+    canvas1.create_window(200, 230, window=label4)
 
 
-scan()
+button1 = tk.Button(
+    text="Scan", command=scan, bg="brown", fg="white", font=("helvetica", 9, "bold")
+)
+canvas1.create_window(200, 180, window=button1)
+
+root.mainloop()
