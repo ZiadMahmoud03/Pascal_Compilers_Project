@@ -4,7 +4,7 @@ import re
 import pandas
 
 
-class Token_type(Enum):  # listing all tokens type
+class TokenType(Enum):  # listing all tokens type
     And = 1
     Array = 2
     Begin = 3
@@ -85,79 +85,79 @@ class token:
 
 # Reserved word Dictionary
 ReservedWords = {
-    "AND": Token_type.And,
-    "ARRAY": Token_type.Array,
-    "BEGIN": Token_type.Begin,
-    "CASE": Token_type.Case,
-    "CONST": Token_type.Constant,
-    "DIV": Token_type.Divide,
-    "DO": Token_type.Do,
-    "DOWNTO": Token_type.Downto,
-    "ElSE": Token_type.Else,
-    "END": Token_type.End,
-    "FILE": Token_type.File,
-    "FOR": Token_type.For,
-    "FUNCTION": Token_type.Function,
-    "GOTO": Token_type.Goto,
-    "IF": Token_type.If,
-    "IN": Token_type.In,
-    "LABEL": Token_type.Label,
-    "MOD": Token_type.Mod,
-    "NIL": Token_type.Nil,
-    "NOT": Token_type.Not,
-    "OF": Token_type.Of,
-    "OR": Token_type.Or,
-    "PACKED": Token_type.Packed,
-    "PROCEDURE": Token_type.Procedure,
-    "PROGRAM": Token_type.Program,
-    "RECORD": Token_type.Record,
-    "SET": Token_type.Set,
-    "THEN": Token_type.Then,
-    "TO": Token_type.To,
-    "TYPE": Token_type.Type,
-    "UNTIL": Token_type.Until,
-    "VAR": Token_type.Var,
-    "WHILE": Token_type.While,
-    "WITH": Token_type.With
+    "AND": TokenType.And,
+    "ARRAY": TokenType.Array,
+    "BEGIN": TokenType.Begin,
+    "CASE": TokenType.Case,
+    "CONST": TokenType.Constant,
+    "DIV": TokenType.Divide,
+    "DO": TokenType.Do,
+    "DOWNTO": TokenType.Downto,
+    "ElSE": TokenType.Else,
+    "END": TokenType.End,
+    "FILE": TokenType.File,
+    "FOR": TokenType.For,
+    "FUNCTION": TokenType.Function,
+    "GOTO": TokenType.Goto,
+    "IF": TokenType.If,
+    "IN": TokenType.In,
+    "LABEL": TokenType.Label,
+    "MOD": TokenType.Mod,
+    "NIL": TokenType.Nil,
+    "NOT": TokenType.Not,
+    "OF": TokenType.Of,
+    "OR": TokenType.Or,
+    "PACKED": TokenType.Packed,
+    "PROCEDURE": TokenType.Procedure,
+    "PROGRAM": TokenType.Program,
+    "RECORD": TokenType.Record,
+    "SET": TokenType.Set,
+    "THEN": TokenType.Then,
+    "TO": TokenType.To,
+    "TYPE": TokenType.Type,
+    "UNTIL": TokenType.Until,
+    "VAR": TokenType.Var,
+    "WHILE": TokenType.While,
+    "WITH": TokenType.With
 }
 
 ArithmeticOperators = {
-    ".": Token_type.Dot,
-    ";": Token_type.Semicolon,
-    "=": Token_type.EqualOp,
-    ":=": Token_type.AssignmentOp,
-    "+": Token_type.PlusOp,
-    "-": Token_type.MinusOp,
-    "*": Token_type.MultiplyOp,
-    "/": Token_type.DivideOp
+    ".": TokenType.Dot,
+    ";": TokenType.Semicolon,
+    "=": TokenType.EqualOp,
+    ":=": TokenType.AssignmentOp,
+    "+": TokenType.PlusOp,
+    "-": TokenType.MinusOp,
+    "*": TokenType.MultiplyOp,
+    "/": TokenType.DivideOp
 }
 
 RelationalOperators = {
-    "<=": Token_type.LessThanEqOp,
-    ">=": Token_type.GreaterThanEqOp,
-    "=": Token_type.EqualOp,
-    "<": Token_type.LessThanOp,
-    ">": Token_type.GreaterThanOp
+    "<=": TokenType.LessThanEqOp,
+    ">=": TokenType.GreaterThanEqOp,
+    "=": TokenType.EqualOp,
+    "<": TokenType.LessThanOp,
+    ">": TokenType.GreaterThanOp
 }
 
 Comments = {
-    "{*": Token_type.OpenMultiCommentOp,
-    "}*": Token_type.CloseMultiCommentOp,
-    "{": Token_type.OpenCommentOp,
-    "}": Token_type.CloseCommentOp,
-    ")": Token_type.rightparenthesis,
-    "(": Token_type.leftparenthesis,
-    "'": Token_type.quote
+    "{*": TokenType.OpenMultiCommentOp,
+    "}*": TokenType.CloseMultiCommentOp,
+    "{": TokenType.OpenCommentOp,
+    "}": TokenType.CloseCommentOp,
+    ")": TokenType.rightparenthesis,
+    "(": TokenType.leftparenthesis,
+    "'": TokenType.quote
 }
 
 Constants = {
-    "writeln": Token_type.WriteLine,
-    "readln": Token_type.ReadLine,
-    "INTEGER": Token_type.Integer,
-    "REAL": Token_type.Real,
-    "CHAR": Token_type.Character,
-    "STRING": Token_type.String,
-    "BOOLEAN": Token_type.Boolean
+    "writeln": TokenType.WriteLine,
+    "readln": TokenType.ReadLine,
+    "INTEGER": TokenType.Integer,
+    "REAL": TokenType.Real,
+    "CHAR": TokenType.Character,
+    "STRING": TokenType.String,
+    "BOOLEAN": TokenType.Boolean
 
 }
 
@@ -185,13 +185,14 @@ def find_token(text):
             token_type = Constants[t.upper()]
             result += f"{t}: {token_type}\n"
         elif re.match("^[a-zA-Z][a-zA-Z0-9]*$", t):
-            token_type = Token_type.Identifier
+            token_type = TokenType.Identifier
             result += f"{t}: {token_type}\n"
         elif re.match("[-+]?\d+(\.\d+)?([eE][-+]?\d+)?", t):
-            token_type = Token_type.Number
+            token_type = TokenType.Number
             result += f"{t}: {token_type}\n"
 
     print(result)
+    return result
 
 
 root = tk.Tk()
@@ -217,10 +218,7 @@ def scan():
     find_token(uppercase_text)
     df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
     print(df)
-    label3 = tk.Label(root, text="Lexem " + x1 + " is:", font=("helvetica", 10))
-    canvas1.create_window(200, 210, window=label3)
-
-    label4 = tk.Label(root, text="Token_type" + x1, font=("helvetica", 10, "bold"))
+    label4 = tk.Label(root, text="Lexem is " + find_token(uppercase_text), font=("helvetica", 10, "bold"))
     canvas1.create_window(200, 230, window=label4)
 
 
