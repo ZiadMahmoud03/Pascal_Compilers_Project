@@ -68,6 +68,7 @@ class TokenType(Enum):  # listing all tokens type
     Boolean = 61
     Identifier = 62
     Number = 63
+    Error = 64
 
 
 # class token to hold string and token type
@@ -190,6 +191,8 @@ def find_token(text):
         elif re.match("[-+]?\d+(\.\d+)?([eE][-+]?\d+)?", t):
             token_type = TokenType.Number
             result += f"{t}: {token_type}\n"
+        else:
+            token_type = TokenType.Error
 
     print(result)
     return result
