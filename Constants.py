@@ -1,8 +1,7 @@
 from enum import Enum
 
-from enum import Enum
 
-class Token_type(Enum):  # listing all tokens type
+class TokenType(Enum):  # listing all tokens type
     And = 1
     Array = 2
     Begin = 3
@@ -55,89 +54,96 @@ class Token_type(Enum):  # listing all tokens type
     String = 50
     OpenParenthesis = 51
     CloseParenthesis = 52
-    AssignmentOperator = 53
+    AssignmentOp = 53
     Dot = 54
     Colon = 55
-    Error = 100
-    Uses = 101
-    Boolean=102
-    Real=103
-    Integer=104
-    Char=105
-    Read=106
-    ReadLn=107
-    Write=108
-    WriteLn=109
+    OpenMultiCommentOp = 56
+    CloseMultiCommentOp = 57
+    CloseCommentOp = 58
+    OpenCommentOp = 59
+    Error = 60
+    Uses = 61
+    Boolean = 62
+    Real = 63
+    Integer = 64
+    Char = 65
+    Read = 66
+    ReadLn = 67
+    Write = 68
+    WriteLn = 69
 
 
 # Reserved word Dictionary
 ReservedWords = {
-    "if": Token_type.If,
-    "downto": Token_type.Downto,
-    "function": Token_type.Function,
-    "mod": Token_type.Mod,
-    "packed": Token_type.Packed,
-    "set": Token_type.Set,
-    "var": Token_type.Var,
-    "case": Token_type.Case,
-    "goto": Token_type.Goto,
-    "nil": Token_type.Nil,
-    "procedure": Token_type.Procedure,
-    "then": Token_type.Then,
-    "while": Token_type.While,
-    "const": Token_type.Const,
-    "not": Token_type.Not,
-    "program": Token_type.Program,
-    "to": Token_type.To,
-    "with": Token_type.With,
-    "end": Token_type.End,
-    "begin": Token_type.Begin,
-    "do": Token_type.Do,
-    "else": Token_type.Else,
-    "and": Token_type.And,
-    "div": Token_type.Div,
-    "file": Token_type.File,
-    "of": Token_type.Of,
-    "in": Token_type.In,
-    "record": Token_type.Record,
-    "type": Token_type.Type,
-    "array": Token_type.Array,
-    "label": Token_type.Label,
-    "or": Token_type.Or,
-    "repeat": Token_type.Repeat,
-    "until": Token_type.Until,
-    "for": Token_type.For,
-    "uses": Token_type.Uses,
-    "boolean":Token_type.Boolean,
-    "string":Token_type.String,
-    "real" : Token_type.Real,
-    "integer":Token_type.Integer,
-    "read" : Token_type.Read,
-    "readln" :Token_type.ReadLn,
-    "write" :Token_type.Write,
-    "writeln":Token_type.WriteLn
+    "if": TokenType.If,
+    "downto": TokenType.Downto,
+    "function": TokenType.Function,
+    "mod": TokenType.Mod,
+    "packed": TokenType.Packed,
+    "set": TokenType.Set,
+    "var": TokenType.Var,
+    "case": TokenType.Case,
+    "goto": TokenType.Goto,
+    "nil": TokenType.Nil,
+    "procedure": TokenType.Procedure,
+    "then": TokenType.Then,
+    "while": TokenType.While,
+    "const": TokenType.Const,
+    "not": TokenType.Not,
+    "program": TokenType.Program,
+    "to": TokenType.To,
+    "with": TokenType.With,
+    "end": TokenType.End,
+    "begin": TokenType.Begin,
+    "do": TokenType.Do,
+    "else": TokenType.Else,
+    "and": TokenType.And,
+    "div": TokenType.Div,
+    "file": TokenType.File,
+    "of": TokenType.Of,
+    "in": TokenType.In,
+    "record": TokenType.Record,
+    "type": TokenType.Type,
+    "array": TokenType.Array,
+    "label": TokenType.Label,
+    "or": TokenType.Or,
+    "repeat": TokenType.Repeat,
+    "until": TokenType.Until,
+    "for": TokenType.For,
+    "uses": TokenType.Uses,
+    "boolean":TokenType.Boolean,
+    "string":TokenType.String,
+    "real" : TokenType.Real,
+    "integer":TokenType.Integer,
+    "read" : TokenType.Read,
+    "readln" :TokenType.ReadLn,
+    "write" :TokenType.Write,
+    "writeln":TokenType.WriteLn
 
 }
 
 Operators = {
     # Arithmetic
-    "+": Token_type.PlusOp,
-    "-": Token_type.MinusOp,
-    "*": Token_type.MultiplyOp,
-    "/": Token_type.DivideOp,
-    # Relational
-    "=": Token_type.EqualOp,
-    "<": Token_type.LessThanOp,
-    ">": Token_type.GreaterThanOp,
-    ">=": Token_type.GreaterThanOrEqualOp,
-    "<=": Token_type.SmallerThanOrEqualOp,
-    # Parenthesis
-    "(": Token_type.OpenParenthesis,
-    ")": Token_type.CloseParenthesis,
-    # Assignment
-    ":=": Token_type.AssignmentOperator,
-    # General
-    ";": Token_type.Semicolon,
-    ",": Token_type.Comma,
-    ":": Token_type.Colon,
+    "+": TokenType.PlusOp,
+    "-": TokenType.MinusOp,
+    "*": TokenType.MultiplyOp,
+    "/": TokenType.DivideOp,
+    "=": TokenType.EqualOp,
+    "<": TokenType.LessThanOp,
+    ">": TokenType.GreaterThanOp,
+    ">=": TokenType.GreaterThanOrEqualOp,
+    "<=": TokenType.SmallerThanOrEqualOp,
+    "(": TokenType.OpenParenthesis,
+    ")": TokenType.CloseParenthesis,
+    ":=": TokenType.AssignmentOp,
+    ";": TokenType.Semicolon,
+    ",": TokenType.Comma,
+    ":": TokenType.Colon,
+}
+
+Comments = {
+    "{*": TokenType.OpenMultiCommentOp,
+    "}*": TokenType.CloseMultiCommentOp,
+    "{": TokenType.OpenCommentOp,
+    "}": TokenType.CloseCommentOp,
 }
