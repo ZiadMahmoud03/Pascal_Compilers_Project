@@ -6,8 +6,8 @@ class TokenType(Enum):  # listing all tokens type
     Array = 2
     Begin = 3
     Case = 4
-    Constant = 5
-    Divide = 6
+    Const = 5
+    Div = 6
     Do = 7
     Downto = 8
     Else = 9
@@ -37,92 +37,108 @@ class TokenType(Enum):  # listing all tokens type
     Var = 33
     While = 34
     With = 35
-    Dot = 36
-    Semicolon = 37
+    Semicolon = 36
+    EqualOp = 37
     LessThanOp = 38
     GreaterThanOp = 39
-    LessThanEqOp = 40
-    GreaterThanEqOp = 41
-    EqualOp = 42
-    AssignmentOp = 43
-    PlusOp = 44
-    MinusOp = 45
-    MultiplyOp = 46
-    DivideOp = 47
-    OpenMultiCommentOp = 48
-    CloseMultiCommentOp = 49
-    CloseCommentOp = 50
-    OpenCommentOp = 51
-    rightparenthesis = 52
-    leftparenthesis = 53
-    quote = 54
-    WriteLine = 55
-    ReadLine = 56
-    Integer = 57
-    Real = 58
-    Character = 59
-    String = 60
-    Boolean = 61
-    Identifier = 62
-    Number = 63
-    Error = 64
+    NotEqualOp = 40
+    GreaterThanOrEqualOp = 41
+    SmallerThanOrEqualOp = 42
+    PlusOp = 43
+    MinusOp = 44
+    MultiplyOp = 45
+    DivideOp = 46
+    Identifier = 47
+    Constant = 48
+    Comma = 49
+    String = 50
+    OpenParenthesis = 51
+    CloseParenthesis = 52
+    AssignmentOp = 53
+    Dot = 54
+    Colon = 55
+    OpenMultiCommentOp = 56
+    CloseMultiCommentOp = 57
+    CloseCommentOp = 58
+    OpenCommentOp = 59
+    Error = 60
+    Uses = 61
+    Boolean = 62
+    Real = 63
+    Integer = 64
+    Char = 65
+    Read = 66
+    ReadLn = 67
+    Write = 68
+    WriteLn = 69
 
 
 # Reserved word Dictionary
 ReservedWords = {
-    "AND": TokenType.And,
-    "ARRAY": TokenType.Array,
-    "BEGIN": TokenType.Begin,
-    "CASE": TokenType.Case,
-    "CONST": TokenType.Constant,
-    "DIV": TokenType.Divide,
-    "DO": TokenType.Do,
-    "DOWNTO": TokenType.Downto,
-    "ElSE": TokenType.Else,
-    "END": TokenType.End,
-    "FILE": TokenType.File,
-    "FOR": TokenType.For,
-    "FUNCTION": TokenType.Function,
-    "GOTO": TokenType.Goto,
-    "IF": TokenType.If,
-    "IN": TokenType.In,
-    "LABEL": TokenType.Label,
-    "MOD": TokenType.Mod,
-    "NIL": TokenType.Nil,
-    "NOT": TokenType.Not,
-    "OF": TokenType.Of,
-    "OR": TokenType.Or,
-    "PACKED": TokenType.Packed,
-    "PROCEDURE": TokenType.Procedure,
-    "PROGRAM": TokenType.Program,
-    "RECORD": TokenType.Record,
-    "SET": TokenType.Set,
-    "THEN": TokenType.Then,
-    "TO": TokenType.To,
-    "TYPE": TokenType.Type,
-    "UNTIL": TokenType.Until,
-    "VAR": TokenType.Var,
-    "WHILE": TokenType.While,
-    "WITH": TokenType.With
+    "if": TokenType.If,
+    "downto": TokenType.Downto,
+    "function": TokenType.Function,
+    "mod": TokenType.Mod,
+    "packed": TokenType.Packed,
+    "set": TokenType.Set,
+    "var": TokenType.Var,
+    "case": TokenType.Case,
+    "goto": TokenType.Goto,
+    "nil": TokenType.Nil,
+    "procedure": TokenType.Procedure,
+    "then": TokenType.Then,
+    "while": TokenType.While,
+    "const": TokenType.Const,
+    "not": TokenType.Not,
+    "program": TokenType.Program,
+    "to": TokenType.To,
+    "with": TokenType.With,
+    "end": TokenType.End,
+    "begin": TokenType.Begin,
+    "do": TokenType.Do,
+    "else": TokenType.Else,
+    "and": TokenType.And,
+    "div": TokenType.Div,
+    "file": TokenType.File,
+    "of": TokenType.Of,
+    "in": TokenType.In,
+    "record": TokenType.Record,
+    "type": TokenType.Type,
+    "array": TokenType.Array,
+    "label": TokenType.Label,
+    "or": TokenType.Or,
+    "repeat": TokenType.Repeat,
+    "until": TokenType.Until,
+    "for": TokenType.For,
+    "uses": TokenType.Uses,
+    "boolean":TokenType.Boolean,
+    "string":TokenType.String,
+    "real" : TokenType.Real,
+    "integer":TokenType.Integer,
+    "read" : TokenType.Read,
+    "readln" :TokenType.ReadLn,
+    "write" :TokenType.Write,
+    "writeln":TokenType.WriteLn
+
 }
 
-ArithmeticOperators = {
-    ".": TokenType.Dot,
-    ";": TokenType.Semicolon,
-    "=": TokenType.EqualOp,
-    ":=": TokenType.AssignmentOp,
+Operators = {
+    # Arithmetic
     "+": TokenType.PlusOp,
     "-": TokenType.MinusOp,
     "*": TokenType.MultiplyOp,
-    "/": TokenType.DivideOp
-}
-
-RelationalOperators = {
-    "<=": TokenType.LessThanEqOp,
-    ">=": TokenType.GreaterThanEqOp,
+    "/": TokenType.DivideOp,
     "=": TokenType.EqualOp,
     "<": TokenType.LessThanOp,
-    ">": TokenType.GreaterThanOp
+    ">": TokenType.GreaterThanOp,
+    ">=": TokenType.GreaterThanOrEqualOp,
+    "<=": TokenType.SmallerThanOrEqualOp,
+    "(": TokenType.OpenParenthesis,
+    ")": TokenType.CloseParenthesis,
+    ":=": TokenType.AssignmentOp,
+    ";": TokenType.Semicolon,
+    ",": TokenType.Comma,
+    ":": TokenType.Colon,
 }
 
 Comments = {
@@ -130,18 +146,5 @@ Comments = {
     "}*": TokenType.CloseMultiCommentOp,
     "{": TokenType.OpenCommentOp,
     "}": TokenType.CloseCommentOp,
-    ")": TokenType.rightparenthesis,
-    "(": TokenType.leftparenthesis,
-    "'": TokenType.quote
 }
 
-Constants = {
-    "writeln": TokenType.WriteLine,
-    "readln": TokenType.ReadLine,
-    "INTEGER": TokenType.Integer,
-    "REAL": TokenType.Real,
-    "CHAR": TokenType.Character,
-    "STRING": TokenType.String,
-    "BOOLEAN": TokenType.Boolean
-
-}
