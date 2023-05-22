@@ -85,7 +85,7 @@ ReservedWords = {
     "BEGIN": Token_type.Begin,
     "CASE": Token_type.Case,
     "CONST": Token_type.Constant,
-    "DIV": Token_type.Divide,
+    "DIV": Token_type.Div,
     "DO": Token_type.Do,
     "DOWNTO": Token_type.Downto,
     "ElSE": Token_type.Else,
