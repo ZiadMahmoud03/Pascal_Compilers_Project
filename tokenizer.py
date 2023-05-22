@@ -19,4 +19,4 @@ Tokens = []  # to add tokens to list
 
 def find_token(text):
      tokens = re.findall('\w+|[\.\;\:\=\+\-\*\/\<\>\(\)\{\}\']', text)
-    
+
