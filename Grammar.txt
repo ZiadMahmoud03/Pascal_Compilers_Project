@@ -35,10 +35,34 @@ FunctionDecS' -> FunctionHeader LocalDeclaration FunctionBlock
 ProcedureHeader -> procedure ProcedureName (ArgumentsIdList) : Datatype;
 FunctionHeader -> function FunctionName (ArgumentsIdList) : Datatype;
 
-ArgumentsIdList → Option ParametersList : Datatype DefaultValue; ArgumentsIdList' |ParametersList : Datatype DefaultValue;
+ProcedureName -> Identifier
+FunctionName -> Identifier
+
+ArgumentsIdList -> DeclarationType ParametersList : Datatype DefaultValue; ArgumentsIdList |ParametersList : Datatype DefaultValue;
+
+ParametersList -> ParametersList , identifier | identifier
+ParametersList -> identifier ParametersList*
+ParametersList* -> , identifier   ParametersList* | ε
+
+DefaultValue -> ε | = Constant
 
 --------------------------------------------------Execution-------------------------------------------------------------
 
+ProcedureBlock -> begin ProcedureStatements end;
+FunctionBlock -> begin FunctionStatements end;
+
+
+
+
+
+
+
+
+
+CompareOperators → > | < | = | >= | <= | not | and | or | xor
+ArithmaticOperators -> MultDivOp | AddMinusOp
+MultDivOp -> * | /
+AddMinusOp -> + |-
 
 DataType -> integer| real| char| string| Boolean
 Constant -> constant | string| boolean | char| integer //
