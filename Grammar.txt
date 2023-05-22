@@ -36,11 +36,11 @@ FunctionHeader -> function FunctionName (ArgumentsIdList) : Datatype;
 LocalDeclaration -> LabelDecl | ConstDecl | FunctionDec | ProcedureDec
 
 LabelDecl -> label Label Label' ;
-Label -> DigitSeq | Identifier
+Label -> NumSeq | Identifier
 Label' -> , Label | ε
-DigitSeq -> Digit Digit'
-Digit -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | ε
-Digit' -> DigitSeq | ε
+NumSeq -> Num Num'
+Num -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | ε
+Num' -> NumSeq | ε
 
 ProcedureName -> Identifier
 FunctionName -> Identifier
@@ -55,26 +55,85 @@ ParametersList' -> , identifier ParametersList' | ε
 DefaultValue -> ε | = Constant
 
 --------------------------------------------------Execution-------------------------------------------------------------
+Execution -> CodeBlock
+
+CodeBlock -> begin CodeStatements end.
 
 ProcedureBlock -> begin ProcedureStatements end; EndOfProcedure
 FunctionBlock -> begin FunctionStatements end; EndOfFunction
-CodeBlock -> begin CodeStatements end.
 
-ProcedureStatements ->
-FunctionStatements ->
+ProcedureStatements -> Statement ProcedureStatements'
+ProcedureStatements' -> ; Statement ProcedureStatements' | ε
+
+FunctionStatements -> Statement FunctionStatements'
+FunctionStatements' -> ; Statement FunctionStatements' | ε
+
+
+CodeStatements -> Statement CodeStatements'
+CodeStatements' -> ; CodeStatements2 | ε
+CodeStatement2 -> CodeStatements | ε
+
+Statement -> AssignmentStatement | ProcedureCallStatement | FunctionCallStatement | IfStatement | WhileStatement
+ | RepeatStatement | ForStatement | CaseStatement | Comment | ReadLnStatement | WriteLnStatement | GotoStatement
+ | SetStatement
+
+AssignmentStatement -> Expression := Expression
+
+ProcedureCallStatement -> ProcedureName (ExpressionList)
+FunctionCallStatement -> FunctionName (ExpressionList)
+
+IfStatement -> if Condition then CodeStatement IfStatement'
+IfStatement' -> ElseStatement | ε
+ElseStatement -> else CodeStatements
+
+
+WhileStatement -> while Condition do CodeStatement
+RepeatStatement -> repeat CodeStatement until Condition
+ForStatement -> for ForExpression do CodeStatement
+ForExpression -> Expression := Expression to Expression | Expression in Expression
+CaseStatement -> case Expression of CaseList ElseStatement end;
+
+CaseList -> CaseItem CaseList' : Statement ;
+CaseList' -> , CaseList | ε
+
+CaseItem -> ConstantList : CodeStatement
+Condition -> Expression CompareOperators Expression
+
+ReadLnStatement -> readln (Identifier)
+WriteLnStatement -> writeln (ExpressionList)
+
+GotoStatement -> goto Expression
+
+SetStatement -> set of Constant
+
+
+ExpressionList -> Expression ExpressionList'
+ExpressionList' -> , ExpressionList | ε
+Expression -> Term Expression' | ArrayType | downto  ///
+Expression' -> ArithmaticOperators Term Expression' | ε
+
+Term -> Factor Term'
+Term' -> ArithmaticOperators Factor Term' | ε
+
+Factor -> Identifier | Num | (Expression)
 
 EndOfProcedure -> { end of procedure ProcedureName }
-EndOfFunction -> { end of procedure FunctionName }
+EndOfFunction -> { end of function FunctionName }
 
 
+ArrayType -> array [ IndexList ] of DataType
 
+IndexList -> IndexRange IndexList'
+IndexList' -> , IndexRange IndexList' | ε
+IndexRange -> Factor .. Factor
 
 CompareOperators -> > | < | = | <> | >= | <= | not | and | or | xor
-ArithmaticOperators -> MultDivOp | AddMinusOp
+ArithmaticOperators -> MultDivOp | AddMinusOp | ModOperator
 MultDivOp -> * | /
 AddMinusOp -> + |-
+ModOperator -> mod
 
-DataType -> integer| real| char| string| Boolean
-Constant -> constant | string| boolean | char| integer //
+DataType -> integer | real | char | string | Boolean
+Constant -> constant | string | boolean | char| integer | nil
 
-Comment ->
+Comment -> { Expression } | {* Expression *}
