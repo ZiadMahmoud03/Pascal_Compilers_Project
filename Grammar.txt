@@ -1,8 +1,30 @@
 ------------------------------------------------------------------------------------------------------------------------
 Program -> Heading DeclarationSec Execution
+
+----------------------------------------------------Heading-------------------------------------------------------------
 Heading -> ProgramID Uses
 ProgramID -> program identifier ;
 Uses -> uses PackageList ; | ε
-
 PackageList -> Package PackageList'
 PackageList' -> , Package PackageList' | ε
+
+--------------------------------------------------DeclarationSec--------------------------------------------------------
+DeclarationSec -> Declaration ProcedureDeclarationSec
+Declaration -> DeclarationType | ε
+DeclarationType -> VarDecl |  ConstDecl |  TypeDecl
+
+VarDecl → var VarDecl' | ε
+VarDecl' → VarIdList VarDecl2 : Datatype;
+VarDecl2 → VarDecl' | ε
+
+ConstDecl -> const ConstDecl' | ε
+ConstDecl' -> Identifier = Constant; ConstDecl2
+ConstDecl2 -> ConstDecl' | ε
+Constant -> constant | string| boolean | char| integer
+
+TypeDecl -> type TypeDecl' | ε
+TypeDecl' -> TypeIdList TypeDecl2 : DataType;
+TypeDecl2 -> TypeDecl' | ε
+
+
+--------------------------------------------------Execution-------------------------------------------------------------
