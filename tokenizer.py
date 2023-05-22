@@ -2,6 +2,8 @@ import re
 # Categorise each lexeme into tokens
 # If invalid token found, report an error.
 # class token to hold string and token type
+
+
 class token:
     def __init__(self, lex, token_type):
         self.lex = lex
@@ -17,6 +19,4 @@ class token:
 Tokens = []  # to add tokens to list
 
 
-def find_token(text):
-     tokens = re.findall('\w+|[\.\;\:\=\+\-\*\/\<\>\(\)\{\}\']', text)
 
