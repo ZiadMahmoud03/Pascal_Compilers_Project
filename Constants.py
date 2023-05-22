@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Token_type(Enum):  # listing all tokens type
     And = 1
     Array = 2
@@ -41,8 +42,8 @@ class Token_type(Enum):  # listing all tokens type
     LessThanOp = 38
     GreaterThanOp = 39
     NotEqualOp = 40
-    GreaterThanOrEqualOp = 41
-    SmallerThanOrEqualOp = 42
+    GreaterThanEqOp = 41
+    SmallerThanEqOp = 42
     PlusOp = 43
     MinusOp = 44
     MultiplyOp = 45
@@ -65,11 +66,16 @@ class Token_type(Enum):  # listing all tokens type
     Boolean = 62
     Real = 63
     Integer = 64
-    Char = 65
+    Character = 65
     Read = 66
     ReadLn = 67
     Write = 68
     WriteLn = 69
+    LessThanEqOp = 70
+    RightParenthesis = 71
+    LeftParenthesis = 72
+    Quote = 73
+    Number = 74
 
 
 # Reserved word Dictionary
@@ -107,7 +113,9 @@ ReservedWords = {
     "UNTIL": Token_type.Until,
     "VAR": Token_type.Var,
     "WHILE": Token_type.While,
-    "WITH": Token_type.With
+    "WITH": Token_type.With,
+    "REPEAT": Token_type.Repeat,
+    "USES": Token_type.Uses
 }
 
 ArithmeticOperators = {
@@ -134,18 +142,20 @@ Comments = {
     "}*": Token_type.CloseMultiCommentOp,
     "{": Token_type.OpenCommentOp,
     "}": Token_type.CloseCommentOp,
-    ")": Token_type.rightparenthesis,
-    "(": Token_type.leftparenthesis,
-    "'": Token_type.quote
+    ")": Token_type.RightParenthesis,
+    "(": Token_type.LeftParenthesis,
+    "'": Token_type.Quote
 }
 
 Constants = {
-    "writeln": Token_type.WriteLine,
-    "readln": Token_type.ReadLine,
+    "WRITELN": Token_type.WriteLn,
+    "READLN": Token_type.ReadLn,
     "INTEGER": Token_type.Integer,
     "REAL": Token_type.Real,
     "CHAR": Token_type.Character,
     "STRING": Token_type.String,
-    "BOOLEAN": Token_type.Boolean
+    "BOOLEAN": Token_type.Boolean,
+    "READ": Token_type.Read,
+    "WRITE": Token_type.Write,
 
 }
