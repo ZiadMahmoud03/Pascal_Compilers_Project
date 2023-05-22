@@ -159,5 +159,5 @@ Constants = {
     "BOOLEAN": Token_type.Boolean,
     "READ": Token_type.Read,
     "WRITE": Token_type.Write,
-
 }
+
