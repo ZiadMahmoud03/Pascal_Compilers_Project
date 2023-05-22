@@ -77,6 +77,8 @@ class Token_type(Enum):  # listing all tokens type
     Quote = 73
     Number = 74
     EqualFalseOp = 75
+    ArrayOpenBracket = 76
+    ArrayCloseBracket = 77
 
 
 # Reserved word Dictionary
@@ -146,7 +148,9 @@ Comments = {
     "}": Token_type.CloseCommentOp,
     ")": Token_type.RightParenthesis,
     "(": Token_type.LeftParenthesis,
-    "'": Token_type.Quote
+    "'": Token_type.Quote,
+    "[": Token_type.ArrayOpenBracket,
+    "]": Token_type.ArrayCloseBracket
 }
 
 Constants = {
