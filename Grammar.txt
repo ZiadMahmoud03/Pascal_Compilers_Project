@@ -9,22 +9,36 @@ PackageList -> Package PackageList'
 PackageList' -> , Package PackageList' | ε
 
 --------------------------------------------------DeclarationSec--------------------------------------------------------
-DeclarationSec -> Declaration ProcedureDeclarationSec
+DeclarationSec -> Declaration ProcedureDeclarationSec  //
 Declaration -> DeclarationType | ε
 DeclarationType -> VarDecl |  ConstDecl |  TypeDecl
 
 VarDecl → var VarDecl' | ε
-VarDecl' → VarIdList VarDecl2 : Datatype;
+VarDecl' → VarIdList VarDecl2 : Datatype;   // Check this again later
 VarDecl2 → VarDecl' | ε
 
 ConstDecl -> const ConstDecl' | ε
 ConstDecl' -> Identifier = Constant; ConstDecl2
 ConstDecl2 -> ConstDecl' | ε
-Constant -> constant | string| boolean | char| integer
 
 TypeDecl -> type TypeDecl' | ε
 TypeDecl' -> TypeIdList TypeDecl2 : DataType;
 TypeDecl2 -> TypeDecl' | ε
 
+ProcedureDeclarationSec -> ProcedureDec FunctionDecS | FunctionDecS ProcedureDec | FunctionDecS | ProcedureDec | ε
+ProcedureDec -> ProcedureDec' | ε
+FunctionDecS -> FunctionDecS' | ε
+
+ProcedureDec' -> ProcedureHeader LocalDeclaration ProcedureBlock
+FunctionDecS' -> FunctionHeader LocalDeclaration FunctionBlock
+
+ProcedureHeader -> procedure ProcedureName (ArgumentsIdList) : Datatype;
+FunctionHeader -> function FunctionName (ArgumentsIdList) : Datatype;
+
+ArgumentsIdList → Option ParametersList : Datatype DefaultValue; ArgumentsIdList' |ParametersList : Datatype DefaultValue;
 
 --------------------------------------------------Execution-------------------------------------------------------------
+
+
+DataType -> integer| real| char| string| Boolean
+Constant -> constant | string| boolean | char| integer //
