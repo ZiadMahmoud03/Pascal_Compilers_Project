@@ -35,13 +35,13 @@ def find_token(text):
             new_token=token(le,RelationalOperators[le])
             Tokens.append(new_token)
         elif (re.match("^\d+(\.[0-9]*)?$",le)):
-            new_token=token(le,TokenType.Constant)
+            new_token=token(le,Token_type.Constant)
             Tokens.append(new_token)
         elif (re.match("^([a-zA-Z][a-zA-Z0-9]*)$",le)):
-            new_token=token(le,TokenType.Identifier)
+            new_token=token(le,Token_type.Identifier)
             Tokens.append(new_token)
         else :
-            new_token=token(le,TokenType.Error)
+            new_token=token(le,Token_type.Error)
             errors.append("Lexical error  "+ le)
 
 
@@ -50,7 +50,7 @@ def Parse():
     Children = []
     # Header_dict=Header(j)
     # Children.append(Header_dict["node"])
-    dic_output = Match(TokenType.Dot, j)
+    dic_output = Match(Token_type.Dot, j)
     Children.append(dic_output["node"])
     Node = Tree('Program', Children)
 
@@ -59,11 +59,11 @@ def Parse():
 
 def Header(j):
     Children = []
-    dic_output = Match(TokenType.Program, j)
+    dic_output = Match(Token_type.Program, j)
     Children.append(dic_output["node"])
-    dic_output = Match(TokenType.Identifier, dic_output["index"])
+    dic_output = Match(Token_type.Identifier, dic_output["index"])
     Children.append(dic_output["node"])
-    dic_output = Match(TokenType.Semicolon, dic_output["index"])
+    dic_output = Match(Token_type.Semicolon, dic_output["index"])
     Children.append(dic_output["node"])
     Node = Tree('Header', Children)
     return Node

@@ -1,7 +1,6 @@
 from enum import Enum
 
-
-class TokenType(Enum):  # listing all tokens type
+class Token_type(Enum):  # listing all tokens type
     And = 1
     Array = 2
     Begin = 3
@@ -75,76 +74,78 @@ class TokenType(Enum):  # listing all tokens type
 
 # Reserved word Dictionary
 ReservedWords = {
-    "if": TokenType.If,
-    "downto": TokenType.Downto,
-    "function": TokenType.Function,
-    "mod": TokenType.Mod,
-    "packed": TokenType.Packed,
-    "set": TokenType.Set,
-    "var": TokenType.Var,
-    "case": TokenType.Case,
-    "goto": TokenType.Goto,
-    "nil": TokenType.Nil,
-    "procedure": TokenType.Procedure,
-    "then": TokenType.Then,
-    "while": TokenType.While,
-    "const": TokenType.Const,
-    "not": TokenType.Not,
-    "program": TokenType.Program,
-    "to": TokenType.To,
-    "with": TokenType.With,
-    "end": TokenType.End,
-    "begin": TokenType.Begin,
-    "do": TokenType.Do,
-    "else": TokenType.Else,
-    "and": TokenType.And,
-    "div": TokenType.Div,
-    "file": TokenType.File,
-    "of": TokenType.Of,
-    "in": TokenType.In,
-    "record": TokenType.Record,
-    "type": TokenType.Type,
-    "array": TokenType.Array,
-    "label": TokenType.Label,
-    "or": TokenType.Or,
-    "repeat": TokenType.Repeat,
-    "until": TokenType.Until,
-    "for": TokenType.For,
-    "uses": TokenType.Uses,
-    "boolean":TokenType.Boolean,
-    "string":TokenType.String,
-    "real" : TokenType.Real,
-    "integer":TokenType.Integer,
-    "read" : TokenType.Read,
-    "readln" :TokenType.ReadLn,
-    "write" :TokenType.Write,
-    "writeln":TokenType.WriteLn
-
+    "AND": Token_type.And,
+    "ARRAY": Token_type.Array,
+    "BEGIN": Token_type.Begin,
+    "CASE": Token_type.Case,
+    "CONST": Token_type.Constant,
+    "DIV": Token_type.Divide,
+    "DO": Token_type.Do,
+    "DOWNTO": Token_type.Downto,
+    "ElSE": Token_type.Else,
+    "END": Token_type.End,
+    "FILE": Token_type.File,
+    "FOR": Token_type.For,
+    "FUNCTION": Token_type.Function,
+    "GOTO": Token_type.Goto,
+    "IF": Token_type.If,
+    "IN": Token_type.In,
+    "LABEL": Token_type.Label,
+    "MOD": Token_type.Mod,
+    "NIL": Token_type.Nil,
+    "NOT": Token_type.Not,
+    "OF": Token_type.Of,
+    "OR": Token_type.Or,
+    "PACKED": Token_type.Packed,
+    "PROCEDURE": Token_type.Procedure,
+    "PROGRAM": Token_type.Program,
+    "RECORD": Token_type.Record,
+    "SET": Token_type.Set,
+    "THEN": Token_type.Then,
+    "TO": Token_type.To,
+    "TYPE": Token_type.Type,
+    "UNTIL": Token_type.Until,
+    "VAR": Token_type.Var,
+    "WHILE": Token_type.While,
+    "WITH": Token_type.With
 }
 
-Operators = {
-    # Arithmetic
-    "+": TokenType.PlusOp,
-    "-": TokenType.MinusOp,
-    "*": TokenType.MultiplyOp,
-    "/": TokenType.DivideOp,
-    "=": TokenType.EqualOp,
-    "<": TokenType.LessThanOp,
-    ">": TokenType.GreaterThanOp,
-    ">=": TokenType.GreaterThanOrEqualOp,
-    "<=": TokenType.SmallerThanOrEqualOp,
-    "(": TokenType.OpenParenthesis,
-    ")": TokenType.CloseParenthesis,
-    ":=": TokenType.AssignmentOp,
-    ";": TokenType.Semicolon,
-    ",": TokenType.Comma,
-    ":": TokenType.Colon,
+ArithmeticOperators = {
+    ".": Token_type.Dot,
+    ";": Token_type.Semicolon,
+    "=": Token_type.EqualOp,
+    ":=": Token_type.AssignmentOp,
+    "+": Token_type.PlusOp,
+    "-": Token_type.MinusOp,
+    "*": Token_type.MultiplyOp,
+    "/": Token_type.DivideOp
+}
+
+RelationalOperators = {
+    "<=": Token_type.LessThanEqOp,
+    ">=": Token_type.GreaterThanEqOp,
+    "=": Token_type.EqualOp,
+    "<": Token_type.LessThanOp,
+    ">": Token_type.GreaterThanOp
 }
 
 Comments = {
-    "{*": TokenType.OpenMultiCommentOp,
-    "}*": TokenType.CloseMultiCommentOp,
-    "{": TokenType.OpenCommentOp,
-    "}": TokenType.CloseCommentOp,
+    "{*": Token_type.OpenMultiCommentOp,
+    "}*": Token_type.CloseMultiCommentOp,
+    "{": Token_type.OpenCommentOp,
+    "}": Token_type.CloseCommentOp,
+    ")": Token_type.rightparenthesis,
+    "(": Token_type.leftparenthesis,
+    "'": Token_type.quote
 }
 
+Constants = {
+    "writeln": Token_type.WriteLine,
+    "readln": Token_type.ReadLine,
+    "INTEGER": Token_type.Integer,
+    "REAL": Token_type.Real,
+    "CHAR": Token_type.Character,
+    "STRING": Token_type.String,
+    "BOOLEAN": Token_type.Boolean
+
+}
