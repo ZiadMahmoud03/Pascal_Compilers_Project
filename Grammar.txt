@@ -9,60 +9,72 @@ PackageList -> Package PackageList'
 PackageList' -> , Package PackageList' | ε
 
 --------------------------------------------------DeclarationSec--------------------------------------------------------
-DeclarationSec -> Declaration ProcedureDeclarationSec  //
+DeclarationSec -> Declaration ProcedureDeclarationSec
 Declaration -> DeclarationType | ε
 DeclarationType -> VarDecl |  ConstDecl |  TypeDecl
 
-VarDecl → var VarDecl' | ε
-VarDecl' → VarIdList VarDecl2 : Datatype;   // Check this again later
+VarDecl → var VarDecl'
+VarDecl' → VarIdList VarDecl2 : Datatype;
 VarDecl2 → VarDecl' | ε
 
-ConstDecl -> const ConstDecl' | ε
+ConstDecl -> const ConstDecl'
 ConstDecl' -> Identifier = Constant; ConstDecl2
 ConstDecl2 -> ConstDecl' | ε
 
-TypeDecl -> type TypeDecl' | ε
-TypeDecl' -> TypeIdList TypeDecl2 : DataType;
-TypeDecl2 -> TypeDecl' | ε
+TypeDecl -> type TypeDecl'
+TypeDecl' -> TypeIdList TypeDecl2 = DataType;
+TypeDecl2 -> , TypeDecl' | ε
 
-ProcedureDeclarationSec -> ProcedureDec FunctionDecS | FunctionDecS ProcedureDec | FunctionDecS | ProcedureDec | ε
-ProcedureDec -> ProcedureDec' | ε
-FunctionDecS -> FunctionDecS' | ε
+ProcedureDeclarationSec -> ProcedureDec FunctionDec | FunctionDec ProcedureDec | FunctionDec | ProcedureDec | ε
 
-ProcedureDec' -> ProcedureHeader LocalDeclaration ProcedureBlock
-FunctionDecS' -> FunctionHeader LocalDeclaration FunctionBlock
+ProcedureDec -> Comment ProcedureHeader LocalDeclaration Comment ProcedureBlock
+FunctionDec -> Comment FunctionHeader LocalDeclaration Comment FunctionBlock
 
 ProcedureHeader -> procedure ProcedureName (ArgumentsIdList) : Datatype;
 FunctionHeader -> function FunctionName (ArgumentsIdList) : Datatype;
+
+LocalDeclaration -> LabelDecl | ConstDecl | FunctionDec | ProcedureDec
+
+LabelDecl -> label Label Label' ;
+Label -> DigitSeq | Identifier
+Label' -> , Label | ε
+DigitSeq -> Digit Digit'
+Digit -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | ε
+Digit' -> DigitSeq | ε
 
 ProcedureName -> Identifier
 FunctionName -> Identifier
 
 ArgumentsIdList -> DeclarationType ParametersList : Datatype DefaultValue; ArgumentsIdList |ParametersList : Datatype DefaultValue;
 
-ParametersList -> ParametersList , identifier | identifier
-ParametersList -> identifier ParametersList*
-ParametersList* -> , identifier   ParametersList* | ε
+ArgumentsIdList -> ParametersList : Datatype DefaultValue; ArgumentsIdList | ε
+
+ParametersList -> identifier ParametersList' | identifier
+ParametersList' -> , identifier ParametersList' | ε
 
 DefaultValue -> ε | = Constant
 
 --------------------------------------------------Execution-------------------------------------------------------------
 
-ProcedureBlock -> begin ProcedureStatements end;
-FunctionBlock -> begin FunctionStatements end;
+ProcedureBlock -> begin ProcedureStatements end; EndOfProcedure
+FunctionBlock -> begin FunctionStatements end; EndOfFunction
+CodeBlock -> begin CodeStatements end.
+
+ProcedureStatements ->
+FunctionStatements ->
+
+EndOfProcedure -> { end of procedure ProcedureName }
+EndOfFunction -> { end of procedure FunctionName }
 
 
 
 
-
-
-
-
-
-CompareOperators → > | < | = | >= | <= | not | and | or | xor
+CompareOperators -> > | < | = | <> | >= | <= | not | and | or | xor
 ArithmaticOperators -> MultDivOp | AddMinusOp
 MultDivOp -> * | /
 AddMinusOp -> + |-
 
 DataType -> integer| real| char| string| Boolean
 Constant -> constant | string| boolean | char| integer //
+
+Comment ->
