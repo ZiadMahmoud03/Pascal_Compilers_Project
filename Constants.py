@@ -76,6 +76,7 @@ class Token_type(Enum):  # listing all tokens type
     LeftParenthesis = 72
     Quote = 73
     Number = 74
+    EqualFalseOp = 75
 
 
 # Reserved word Dictionary
@@ -134,7 +135,8 @@ RelationalOperators = {
     ">=": Token_type.GreaterThanEqOp,
     "=": Token_type.EqualOp,
     "<": Token_type.LessThanOp,
-    ">": Token_type.GreaterThanOp
+    ">": Token_type.GreaterThanOp,
+    "<>": Token_type.EqualFalseOp
 }
 
 Comments = {
