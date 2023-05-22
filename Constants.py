@@ -141,7 +141,7 @@ RelationalOperators = {
 
 Comments = {
     "{*": Token_type.OpenMultiCommentOp,
-    "}*": Token_type.CloseMultiCommentOp,
+    "*}": Token_type.CloseMultiCommentOp,
     "{": Token_type.OpenCommentOp,
     "}": Token_type.CloseCommentOp,
     ")": Token_type.RightParenthesis,
