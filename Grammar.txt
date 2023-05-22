@@ -1,1 +1,5 @@
-
+------------------------------------------------------------------------------------------------------------------------
+Program -> Heading DeclarationSec Execution
+Heading -> ProgramID Uses
+ProgramID -> program identifier ;
+Uses -> uses PacakgeList ; | ε
