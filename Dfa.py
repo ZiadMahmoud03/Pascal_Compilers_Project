@@ -131,56 +131,65 @@ def create_reserved_word_dfa(user_input):
     transitions[current_state] = {'': token_type}
 
     return transitions, accepting_states, initial_state
-
 def create_comment_dfa(user_input):
     transitions = {}
-    accepting_states = set()
+    accepting_states = {2,5,9,11}
     initial_state = 0
-    
+
     current_state = initial_state
-    index = 0
-    while index < len(user_input):
-        char = user_input[index]
+    for char in user_input:
         if current_state not in transitions:
             transitions[current_state] = {}
-            
-        if char == '(':
-            next_state = current_state + 1
-            transitions[current_state][char] = next_state 
-            current_state = next_state
-            index += 1
-        elif char == '{':
-            next_state = current_state + 1
-            transitions[current_state][char] = next_state
-            current_state = next_state
-            index += 1
-        elif char == '{*':
-            next_state = current_state + 1
-            transitions[current_state][char] = next_state
-            current_state = next_state
-            index += 1
-        elif char == ')' and current_state > initial_state:
-            accepting_states.add(current_state)
-            token_type = Token_type.rightparenthesis  
-            transitions[current_state] = {'': token_type}
-            index += 1
-            current_state = initial_state
-        elif char == '}' and current_state > initial_state:
-            accepting_states.add(current_state)
-            token_type = Token_type.CloseCommentOp
-            transitions[current_state] = {'': token_type}
-            index += 1
-            current_state = initial_state
-        elif char == '}*' and current_state > initial_state:
-            accepting_states.add(current_state)
-            token_type = Token_type.CloseCommentOp
-            transitions[current_state] = {'': token_type}
-            index += 1
-            current_state = initial_state
+
+        if current_state == 0:
+            if char == "{":
+                next_state = 1
+            elif char == "(":
+                next_state = 4
+            elif char == "*":
+                next_state = 7
+            elif char == "'":
+                next_state = 10
+            else:
+                next_state = 0
+        elif current_state == 1:
+            if char == "}":
+                next_state = 2
+            elif char == "*":
+                next_state = 7
+            else:
+                next_state = 1
+        elif current_state == 4:
+            if char == ")":
+                next_state = 5
+            else:
+                next_state = 4
+        elif current_state == 7:
+            if char == "*":
+                next_state = 8
+            else:
+                next_state = 7
+        elif current_state == 8:
+            if char == "}":
+                next_state = 9
+            else:
+                next_state = 7
+        elif current_state == 10:
+            if char == "'":
+                next_state = 11
+            else:
+                next_state = 10
         else:
-            index += 1  
-        
+            next_state = 0
+
+        transitions[current_state][char] = next_state
+        current_state = next_state
+
+    transitions[current_state] = {}
+
     return transitions, accepting_states, initial_state
+
+
 def draw_comment_dfa(user_input):
     transitions, accepting_states, initial_state = create_comment_dfa(user_input)
     dot = graphviz.Digraph()
@@ -193,13 +202,11 @@ def draw_comment_dfa(user_input):
             dot.node(str(state))
 
         for char, next_state in state_transitions.items():
-            if char == '':
-                char = 'ε'
-            dot.edge(str(state), str(next_state), label=char, constraint='false')
+            dot.edge(str(state), str(next_state), label=char)
 
     dot.attr('node', shape='none')
     dot.node('start', '')
-    dot.edge('start', str(initial_state), label='start', constraint='false')
+    dot.edge('start', str(initial_state), label='start')
 
     dot.format = 'png'
     dot.render('comment_dfa', cleanup=True)
