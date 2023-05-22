@@ -2,4 +2,7 @@
 Program -> Heading DeclarationSec Execution
 Heading -> ProgramID Uses
 ProgramID -> program identifier ;
-Uses -> uses PacakgeList ; | ε
+Uses -> uses PackageList ; | ε
+
+PackageList -> Package PackageList'
+PackageList' -> , Package PackageList' | ε
