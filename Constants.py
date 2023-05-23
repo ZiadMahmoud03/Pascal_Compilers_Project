@@ -76,7 +76,9 @@ class Token_type(Enum):  # listing all tokens type
     LeftParenthesis = 72
     Quote = 73
     Number = 74
-
+    EqualFalseOp = 75
+    ArrayOpenBracket = 76
+    ArrayCloseBracket = 77
 
 # Reserved word Dictionary
 ReservedWords = {
@@ -120,6 +122,7 @@ ReservedWords = {
 
 ArithmeticOperators = {
     ".": Token_type.Dot,
+    ",": Token_type.Comma,
     ";": Token_type.Semicolon,
     "=": Token_type.EqualOp,
     ":=": Token_type.AssignmentOp,
@@ -134,17 +137,20 @@ RelationalOperators = {
     ">=": Token_type.GreaterThanEqOp,
     "=": Token_type.EqualOp,
     "<": Token_type.LessThanOp,
-    ">": Token_type.GreaterThanOp
+    ">": Token_type.GreaterThanOp,
+    "<>": Token_type.EqualFalseOp
 }
 
 Comments = {
     "{*": Token_type.OpenMultiCommentOp,
-    "}*": Token_type.CloseMultiCommentOp,
+    "*}": Token_type.CloseMultiCommentOp,
     "{": Token_type.OpenCommentOp,
     "}": Token_type.CloseCommentOp,
     ")": Token_type.RightParenthesis,
     "(": Token_type.LeftParenthesis,
-    "'": Token_type.Quote
+    "'": Token_type.Quote,
+    "[": Token_type.ArrayOpenBracket,
+    "]": Token_type.ArrayCloseBracket
 }
 
 Constants = {
@@ -157,5 +163,7 @@ Constants = {
     "BOOLEAN": Token_type.Boolean,
     "READ": Token_type.Read,
     "WRITE": Token_type.Write,
-
 }
+
+
+

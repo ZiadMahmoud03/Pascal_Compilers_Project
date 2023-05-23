@@ -1,45 +1,42 @@
-import tkinter as tk
-import re
+import tkinter   as tk
 import pandas
-from Constants import *
-from tokenizer import token, Tokens
+from   Constants import *
+from   tokenizer import *
+
 
 my_text = []
+tokens = token.find_token(my_text)
 
 
-def find_token(my_text):
+def identify_token():
+    result = []
+    inside_comment = False
 
-    result = ""
-    tokens = re.findall('\w+|[\.\;\:\=\+\-\*\/\<\>\(\)\{\}\']', my_text)
     for t in tokens:
-        if t in ReservedWords:
-            token_type = ReservedWords[t.upper()]
-            result += f"{t}: {token_type}\n"
-        elif t in ArithmeticOperators:
-            token_type = ArithmeticOperators[t]
-            result += f"{t}: {token_type}\n"
-        elif t in RelationalOperators:
-            token_type = RelationalOperators[t]
-            result += f"{t}: {token_type}\n"
-        elif t in Comments:
-            token_type = Comments[t]
-            result += f"{t}: {token_type}\n"
-        elif t in Constants:
-            token_type = Constants[t.upper()]
-            result += f"{t}: {token_type}\n"
-        elif re.match("^[a-zA-Z][a-zA-Z0-9]*$", t):
-            token_type = Token_type.Identifier
-            result += f"{t}: {token_type}\n"
-        elif re.match("[-+]?\d+(\.\d+)?([eE][-+]?\d+)?", t):
-            token_type = Token_type.Number
-            result += f"{t}: {token_type}\n"
-        elif t == ">" and t + 1 == "=":
-            token_type = Token_type.GreaterThanEqOp
-            result += f"{t}: {token_type}\n"
+        if inside_comment:
+            if t == "}" or t == "*}":
+                inside_comment = False
+                result += f"{t}: {Comments[t]}\n"
         else:
-            token_type = Token_type.Error
-
+            if t in ReservedWords:
+                result += f"{t}: {ReservedWords[t.upper()]}\n"
+            elif t in ArithmeticOperators:
+                result += f"{t}: {ArithmeticOperators[t]}\n"
+            elif t in Comments and t != "}" and t != "*}" and t != "{" and t != "{*":
+                result += f"{t}: {Comments[t]}\n"
+            elif t in RelationalOperators:
+                result += f"{t}: {RelationalOperators[t]}\n"
+            elif t in Constants:
+                result += f"{t}: {Constants[t.upper()]}\n"
+            elif re.match("^[a-zA-Z][a-zA-Z0-9]*$", t):
+                result += f"{t}: Identifier\n"
+            elif re.match("[-+]?\d+(\.\d+)?([eE][-+]?\d+)?", t):
+                result += f"{t}: Number\n"
+            elif t == "{" or t == "{*":
+                inside_comment = True
+                result += f"{t}: {Comments[t]}\n"
     print(result)
+
 
 root = tk.Tk()
 
@@ -60,7 +57,7 @@ canvas1.create_window(200, 140, window=entry1)
 
 def Scan():
     x1 = entry1.get()
-    find_token(x1)
+    identify_token(x1)
     df = pandas.DataFrame.from_records([lexeme.to_dict() for lexeme in Tokens])
     print(df)
     label3 = tk.Label(root, text="Lexem " + x1 + " is:", font=("helvetica", 10))
