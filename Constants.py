@@ -79,7 +79,6 @@ class Token_type(Enum):  # listing all tokens type
     EqualFalseOp = 75
     ArrayOpenBracket = 76
     ArrayCloseBracket = 77
-
 # Reserved word Dictionary
 ReservedWords = {
     "AND": Token_type.And,
@@ -164,6 +163,3 @@ Constants = {
     "READ": Token_type.Read,
     "WRITE": Token_type.Write,
 }
-
-
-

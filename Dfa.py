@@ -128,60 +128,49 @@ def create_reserved_word_dfa(user_input):
 
     return transitions, accepting_states, initial_state
 
-
 def create_comment_dfa(user_input):
     transitions = {}
-    accepting_states = {2,5,9,11,12}
+    accepting_states = set()
     initial_state = 0
 
     current_state = initial_state
     for char in user_input:
         if current_state not in transitions:
             transitions[current_state] = {}
-
-        if current_state == 0:
-            if char == "{":
-                next_state = 1
-            elif char == "(":
-                next_state = 4
-            elif char == "*":
-                next_state = 7
-            elif char == "'":
-                next_state = 10
-            elif char == "[":
-                next_state = 13
-            else:
-                next_state = 0
-        elif current_state == 1:
-            if char == "}":
-                next_state = 2
-            elif char == "*":
-                next_state = 7
-            else:
-                next_state = 1
-        elif current_state == 4:
-            if char == ")":
-                next_state = 5
-            else:
-                next_state = 4
-        elif current_state == 7:
-            if char == "*":
-                next_state = 8
-            else:
-                next_state = 7
-        elif current_state == 8:
-            if char == "}":
-                next_state = 9
-            else:
-                next_state = 7
-        elif current_state == 10:
-            if char == "'":
-                next_state = 11
-            else:
-                next_state = 10
-        elif current_state == 13:
-            if char == "]":
-                next_state = 12
+            
+        if char == '(':
+            next_state = current_state + 1
+            transitions[current_state][char] = next_state 
+            current_state = next_state
+            index += 1
+        elif char == '{':
+            next_state = current_state + 1
+            transitions[current_state][char] = next_state
+            current_state = next_state
+            index += 1
+        elif char == '{*':
+            next_state = current_state + 1
+            transitions[current_state][char] = next_state
+            current_state = next_state
+            index += 1
+        elif char == ')' and current_state > initial_state:
+            accepting_states.add(current_state)
+            token_type = Token_type.rightparenthesis  
+            transitions[current_state] = {'': token_type}
+            index += 1
+            current_state = initial_state
+        elif char == '}' and current_state > initial_state:
+            accepting_states.add(current_state)
+            token_type = Token_type.CloseCommentOp
+            transitions[current_state] = {'': token_type}
+            index += 1
+            current_state = initial_state
+        elif char == '}*' and current_state > initial_state:
+            accepting_states.add(current_state)
+            token_type = Token_type.CloseCommentOp
+            transitions[current_state] = {'': token_type}
+            index += 1
+            current_state = initial_state
         else:
             next_state = 0
 
@@ -215,3 +204,7 @@ def draw_comment_dfa(user_input):
     dot.render('comment_dfa', cleanup=True)
 
 
+
+def draw_dfa_from_input(user_input):
+    transitions, accepting_states, initial_state = create_comment_dfa(user_input)
+    draw_dfa(transitions, accepting_states, initial_state, format='png')
