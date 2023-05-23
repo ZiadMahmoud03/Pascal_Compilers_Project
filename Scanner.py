@@ -1,40 +1,41 @@
-import tkinter   as tk
+from Constants import *
+import re
 import pandas
-from   Constants import *
-from   tokenizer import *
+from tokenizer import *
+import tkinter   as tk
 
-#adding this comment to try something
-my_text = []
-tokens = token.find_token(my_text)
+# class token to hold string and token type
+Tokens = []  # to add tokens to list
 
 
-def identify_token():
+def find_token(text):
     result = []
+    tokens = re.findall('\w+|<=|>=|==|<>|\{\*|\*\}|\{\*\}\}|[\.\;\,\:\=\+\-\*\/\<\>\(\)\{\}\'\[\]]', text)
     inside_comment = False
-
     for t in tokens:
         if inside_comment:
             if t == "}" or t == "*}":
                 inside_comment = False
-                result += f"{t}: {Comments[t]}\n"
+                result.append(f"{t}: {Comments[t]}\n")
         else:
             if t in ReservedWords:
-                result += f"{t}: {ReservedWords[t.upper()]}\n"
+                result.append(f"{t}: {ReservedWords[t.upper()]}\n")
             elif t in ArithmeticOperators:
-                result += f"{t}: {ArithmeticOperators[t]}\n"
+                result.append(f"{t}: {ArithmeticOperators[t]}\n")
             elif t in Comments and t != "}" and t != "*}" and t != "{" and t != "{*":
-                result += f"{t}: {Comments[t]}\n"
+                result.append(f"{t}: {Comments[t]}\n")
             elif t in RelationalOperators:
-                result += f"{t}: {RelationalOperators[t]}\n"
+                result.append(f"{t}: {RelationalOperators[t]}\n")
             elif t in Constants:
-                result += f"{t}: {Constants[t.upper()]}\n"
+                result.append(f"{t}: {Constants[t.upper()]}\n")
             elif re.match("^[a-zA-Z][a-zA-Z0-9]*$", t):
-                result += f"{t}: Identifier\n"
+                result.append(f"{t}: Identifier\n")
             elif re.match("[-+]?\d+(\.\d+)?([eE][-+]?\d+)?", t):
-                result += f"{t}: Number\n"
+                result.append(f"{t}: Number\n")
             elif t == "{" or t == "{*":
                 inside_comment = True
-                result += f"{t}: {Comments[t]}\n"
+                result.append(f"{t}: {Comments[t]}\n")
+
     print(result)
 
 
@@ -54,11 +55,18 @@ canvas1.create_window(200, 100, window=label2)
 entry1 = tk.Entry(root)
 canvas1.create_window(200, 140, window=entry1)
 
+#
+# x1 =  '[1,2,3,4,5]'
+#     uppercase_text = x1.upper()
+#     find_token(uppercase_text)
+#     df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
+#     print(df)
 
 def Scan():
     x1 = entry1.get()
-    identify_token(x1)
-    df = pandas.DataFrame.from_records([lexeme.to_dict() for lexeme in Tokens])
+    uppercase_text = x1.upper()
+    find_token(uppercase_text)
+    df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
     print(df)
     label3 = tk.Label(root, text="Lexem " + x1 + " is:", font=("helvetica", 10))
     canvas1.create_window(200, 210, window=label3)

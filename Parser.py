@@ -8,66 +8,92 @@ from tokenizer import *
 from Constants import *
 
 
-errors = []
+Tokens = []  # to add tokens to list
 
+t2 = token
 
 def find_token(text):
-    lexems = text.split()
-    for le in lexems:
-        if le in ReservedWords:
-            new_token = token(le, ReservedWords[le])
-            Tokens.append(new_token)
-        elif le in ArithmeticOperators:
-            new_token = token(le, ArithmeticOperators[le])
-            Tokens.append(new_token)
-        elif le in RelationalOperators:
-            new_token = token(le, RelationalOperators[le])
-            Tokens.append(new_token)
-        elif le in Comments:
-            new_token = token(le, Comments[le])
-            Tokens.append(new_token)
-        elif le in Constants:
-            new_token = token(le, Constants[le])
-            Tokens.append(new_token)
-        elif (re.match("^\d+(\.[0-9]*)?$", le)):
-            new_token = token(le, Token_type.Constant)
-            Tokens.append(new_token)
-        elif (re.match("^([a-zA-Z][a-zA-Z0-9]*)$", le)):
-            new_token = token(le, Token_type.Identifier)
-            Tokens.append(new_token)
+    tokens = re.findall('\w+|<=|>=|==|<>|\{\*|\*\}|\{\*\}\}|[\.\;\,\:\=\+\-\*\/\<\>\(\)\{\}\'\[\]]', text)
+    inside_comment = False
+    for t in tokens:
+        if inside_comment:
+            if t == "}":
+                inside_comment = False
+                t2 = token()
+                t2.token_type = Token_type.OpenCommentOp
+                Tokens.append(t2)
+            if t == "*}":
+                inside_comment = False
+                t2 = token()
+                t2.token_type = Token_type.OpenMultiCommentOp
+                Tokens.append(t2)
         else:
-            new_token = token(le, Token_type.Error)
-            errors.append("Lexical error  " + le)
+            if t in ReservedWords:
+                t2 = token()
+                t2.token_type = ReservedWords
+                Tokens.append(t2)
+            elif t in ArithmeticOperators:
+                t2 = token()
+                t2.token_type = ArithmeticOperators
+                Tokens.append(t2)
+            elif t in Comments and t != "}" and t != "*}" and t != "{" and t != "{*":
+                t2 = token(t, Comments[t])
+                Tokens.append(t2)
+            elif t in RelationalOperators:
+                t2 = token()
+                t2.token_type = RelationalOperators
+                Tokens.append(t2)
+            elif t in Constants:
+                t2 = token()
+                t2.token_type = Constants
+                Tokens.append(t2)
+            elif re.match("^[a-zA-Z][a-zA-Z0-9]*$", t):
+                Tokens.append(f"{t}: Identifier\n")
+            elif re.match("[-+]?\d+(\.\d+)?([eE][-+]?\d+)?", t):
+                Tokens.append(f"{t}: Number\n")
+            elif t == "{" or t == "{*":
+                inside_comment = True
+                Tokens.append(f"{t}: {Comments[t]}\n")
+    return Tokens
+
+
+errors = []
 
 
 def Parse():
     j = 0
     Children = []
-    Header_dict = Header(j)
-    DeclarationSec_dict = DeclarationSec(j + 1)
-    Children.append(Header_dict["node"])
+    # Header_dict = Header(j)
+    DeclarationSec_dict = DeclarationSec()
+    Execution_dict = Execution()
+    Children.append(Header())
     Children.append(DeclarationSec_dict["node"])
+    Children.append(Execution_dict["node"])
     #Block_dict=Block(Header_dict["index"])
     #Children.append(Block_dict["Node"])
-    dic_output = Match(Token_type.Program, j)
-    Children.append(dic_output["node"])
+    # dic_output = Match(Token_type.Program, j)
+    # Children.append(dic_output["node"])
     Node = Tree('Program', Children)
 
     return Node
 
-def Header(j):
+def Header():
+    j = 1
     output = dict()
     Children = []
     ProgramID_Dict = Program_ID(j)
+    Uses_Dict = Uses(j)
     Children.append(ProgramID_Dict["node"])
+    Children.append(Uses_Dict["node"])
     # dic_output = Match(Token_type.Program, j)
     # Children.append(dic_output["node"])
     Node = Tree('Header', Children)
     output["node"] = Node
 
-    return output
+    return Node
 
-def DeclarationSec(j):
+def DeclarationSec():
+    j = 2
     output = dict()
     children = []
     # complete
@@ -86,7 +112,8 @@ def DeclarationSec(j):
 
     return output
 
-def Execution(j):
+def Execution():
+    j = 3
     output = dict()
     children = []
     # complete
@@ -111,14 +138,25 @@ def Program_ID(j):
     output = dict()
     children = []
     # complete
-    out1 = Match(Token_type.Uses, j)
-    children.append(out1["node"])
-
+    out1 = Match(Token_type.Program, j)
     out2 = Match(Token_type.Identifier, out1["index"])
-    children.append(out2["node"])
-
     out3 = Match(Token_type.Semicolon, out2["index"])
-    children.append(out3["node"])
+
+    if out1:
+        children.append(out1["node"])
+        if out2:
+            children.append(out2["node"])
+        else:
+            outE2 = "error"
+            children.append(outE2["node"])
+        if out3:
+            children.append(out3["node"])
+        else:
+            outE3 = "error"
+            children.append(outE3["node"])
+    else:
+        out = "empty"
+        children.append(out["node"])
 
     Node = Tree("Program_ID", children)
     output["node"] = Node
@@ -126,6 +164,35 @@ def Program_ID(j):
 
     return output
 
+def Uses(j):
+    output = dict()
+    children = []
+    # complete
+    out1 = Match(Token_type.Uses, j)
+    out2 = Match(Token_type.Identifier, out1["index"])
+    out3 = Match(Token_type.Semicolon, out2["index"])
+
+    if out1:
+        children.append(out1["node"])
+        if out2:
+            children.append(out2["node"])
+        else:
+            outE2 = "error"
+            children.append(outE2["node"])
+        if out3:
+            children.append(out3["node"])
+        else:
+            outE3 = "error"
+            children.append(outE3["node"])
+    else:
+        out = "empty"
+        children.append(out["node"])
+
+    Node = Tree("Uses", children)
+    output["node"] = Node
+    output["index"] = out3["index"]
+
+    return output
 
 def Statements(j):
     output = dict()
@@ -188,7 +255,8 @@ canvas1.create_window(200, 140, window=entry1)
 
 def Scan():
     x1 = entry1.get()
-    find_token(x1)
+    uppercase_text = x1.upper()
+    find_token(uppercase_text)
     df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
     # print(df)
 
