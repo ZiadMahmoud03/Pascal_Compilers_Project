@@ -1,86 +1,165 @@
 import tkinter as tk
-from Constants import *
+from enum import Enum
 import re
 import pandas
 import pandastable as pt
 from nltk.tree import *
-
-
-# class token to hold string and token type
-class token:
-    def __init__(self, lex, token_type):
-        self.lex = lex
-        self.token_type = token_type
-
-    def to_dict(self):
-        return {
-            'Lex': self.lex,
-            'token_type': self.token_type
-        }
-
-
-Tokens = []  # to add tokens to list
+from tokenizer import *
+from Constants import *
 
 
 errors = []
 
 
 def find_token(text):
-    lexems=text.split()
-    for le in  lexems:
-        if(le in ReservedWords ):
-            new_token=token(le,ReservedWords[le])
+    lexems = text.split()
+    for le in lexems:
+        if le in ReservedWords:
+            new_token = token(le, ReservedWords[le])
             Tokens.append(new_token)
-        elif(le in RelationalOperators):
-            new_token=token(le,RelationalOperators[le])
+        elif le in ArithmeticOperators:
+            new_token = token(le, ArithmeticOperators[le])
             Tokens.append(new_token)
-        elif (re.match("^\d+(\.[0-9]*)?$",le)):
-            new_token=token(le,Token_type.Constant)
+        elif le in RelationalOperators:
+            new_token = token(le, RelationalOperators[le])
             Tokens.append(new_token)
-        elif (re.match("^([a-zA-Z][a-zA-Z0-9]*)$",le)):
-            new_token=token(le,Token_type.Identifier)
+        elif le in Comments:
+            new_token = token(le, Comments[le])
             Tokens.append(new_token)
-        else :
-            new_token=token(le,Token_type.Error)
-            errors.append("Lexical error  "+ le)
+        elif le in Constants:
+            new_token = token(le, Constants[le])
+            Tokens.append(new_token)
+        elif (re.match("^\d+(\.[0-9]*)?$", le)):
+            new_token = token(le, Token_type.Constant)
+            Tokens.append(new_token)
+        elif (re.match("^([a-zA-Z][a-zA-Z0-9]*)$", le)):
+            new_token = token(le, Token_type.Identifier)
+            Tokens.append(new_token)
+        else:
+            new_token = token(le, Token_type.Error)
+            errors.append("Lexical error  " + le)
 
 
 def Parse():
     j = 0
     Children = []
-    # Header_dict=Header(j)
-    # Children.append(Header_dict["node"])
-    dic_output = Match(Token_type.Dot, j)
+    Header_dict = Header(j)
+    DeclarationSec_dict = DeclarationSec(j + 1)
+    Children.append(Header_dict["node"])
+    Children.append(DeclarationSec_dict["node"])
+    #Block_dict=Block(Header_dict["index"])
+    #Children.append(Block_dict["Node"])
+    dic_output = Match(Token_type.Program, j)
     Children.append(dic_output["node"])
     Node = Tree('Program', Children)
 
     return Node
 
-
 def Header(j):
+    output = dict()
     Children = []
-    dic_output = Match(Token_type.Program, j)
-    Children.append(dic_output["node"])
-    dic_output = Match(Token_type.Identifier, dic_output["index"])
-    Children.append(dic_output["node"])
-    dic_output = Match(Token_type.Semicolon, dic_output["index"])
-    Children.append(dic_output["node"])
+    ProgramID_Dict = Program_ID(j)
+    Children.append(ProgramID_Dict["node"])
+    # dic_output = Match(Token_type.Program, j)
+    # Children.append(dic_output["node"])
     Node = Tree('Header', Children)
-    return Node
-    pass
+    output["node"] = Node
 
+    return output
+
+def DeclarationSec(j):
+    output = dict()
+    children = []
+    # complete
+    out1 = Match(Token_type.Var, j)
+    children.append(out1["node"])
+
+    out2 = Match(Token_type.Const, out1["index"])
+    children.append(out2["node"])
+
+    out3 = Match(Token_type.Type, out2["index"])
+    children.append(out3["node"])
+
+    Node = Tree("DeclarationSec", children)
+    output["node"] = Node
+    output["index"] = out3["index"]
+
+    return output
+
+def Execution(j):
+    output = dict()
+    children = []
+    # complete
+    out1 = Match(Token_type.Var, j)
+    children.append(out1["node"])
+
+    out2 = Match(Token_type.Const, out1["index"])
+    children.append(out2["node"])
+
+    out3 = Match(Token_type.Type, out2["index"])
+    children.append(out3["node"])
+
+    Node = Tree("Execution", children)
+    output["node"] = Node
+    output["index"] = out3["index"]
+
+    return output
+
+
+def Program_ID(j):
+
+    output = dict()
+    children = []
+    # complete
+    out1 = Match(Token_type.Uses, j)
+    children.append(out1["node"])
+
+    out2 = Match(Token_type.Identifier, out1["index"])
+    children.append(out2["node"])
+
+    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out3["node"])
+
+    Node = Tree("Program_ID", children)
+    output["node"] = Node
+    output["index"] = out3["index"]
+
+    return output
+
+
+def Statements(j):
+    output = dict()
+    children = []
+
+    current = Tokens[j].to_dict()
+
+    if (current['token type'] == Token_type.Read):
+        readOutput= Match(Token_type.Read, j)
+        children.append(readOutput['node '])
+
+        identifierOutput = Match(Token_type.Identifier, readOutput['index'])
+        children.append(identifierOutput['node'])
+    else:
+        writeOutput = Match(Token_type.Write,j)
+        children.append(writeOutput['node'])
+        identifierOutput = Match(Token_type. Identifier, writeOutput['index'])
+        children.append(identifierOutput['node'])
+    Node = Tree('Statements',children)
+    output["node"] = Node
+    output["Index"] = identifierOutput["Index"]
+    return output
 
 def Match(a, j):
     output = dict()
     if (j < len(Tokens)):
-        Temp = Tokens[x].to_dict()
+        Temp = Tokens[j].to_dict()
         if (Temp['token_type'] == a):
             j += 1
             output["node"] = [Temp['Lex']]
             output["index"] = j
             return output
         else:
-            output["node"] = ["error"]
+            output["node"] = [Temp['Lex']]
             output["index"] = j + 1
             errors.append("Syntax error : " + Temp['Lex'] + " Expected dot")
             return output
@@ -88,7 +167,6 @@ def Match(a, j):
         output["node"] = ["error"]
         output["index"] = j + 1
         return output
-
 
 # GUI
 root = tk.Tk()
