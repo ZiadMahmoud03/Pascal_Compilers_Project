@@ -8,11 +8,22 @@ from Constants import *
 from Scanner import *
 
 
-errors = []
+class RecursiveDescent:
+    def __int__(self, tokens):
+        self.tokens = tokens
+        self.errors = []
+    def parse(self):
+        pointer = 0
+        children = []
+        program_out = self.program(pointer)
+        children.append(program_out['node'])
+
+        node = Tree('program', children)
+
+
 
 
 def Parse():
-    j = 0
     Children = []
     # Header_dict = Header(j)
     # DeclarationSec_dict = DeclarationSec()
@@ -29,7 +40,7 @@ def Parse():
     return Node
 
 def Header():
-    j = 1
+    j = 0
     output = dict()
     Children = []
     ProgramID_Dict = Program_ID(j)
@@ -44,11 +55,11 @@ def Header():
     return Node
 
 def DeclarationSec():
-    j = 2
+    j = 1
     output = dict()
     Children = []
     Declaration_Dict = Declaration(j)
-    ProcedureDeclarationSec_Dict = ProcedureDeclarationSec(j)
+    ProcedureDeclarationSec_Dict = ProcedureDeclarationSec(j + 1)
     Children.append(Declaration_Dict["node"])
     Children.append(ProcedureDeclarationSec_Dict["node"])
     # dic_output = Match(Token_type.Program, j)
@@ -60,33 +71,19 @@ def DeclarationSec():
 
 
 def Execution():
-    j = 3
+    j = 2
     output = dict()
     children = []
     # complete
-    out1 = Match(Token_type.Var, j)
-    out2 = Match(Token_type.Const, out1["index"])
-    out3 = Match(Token_type.Type, out2["index"])
+    out1 = Match(Token_type.If, j)
+    children.append(out1["node"])
+    # out2 = Match(Token_type.Const, out1["index"])
+    # out3 = Match(Token_type.Type, out2["index"])
 
-    if out1:
-        children.append(out1["node"])
-        if out2:
-            children.append(out2["node"])
-        else:
-            outE2 = "error"
-            children.append(outE2["node"])
-        if out3:
-            children.append(out3["node"])
-        else:
-            outE3 = "error"
-            children.append(outE3["node"])
-    else:
-        out = "empty"
-        children.append(out["node"])
 
     Node = Tree("Execution", children)
     output["node"] = Node
-    output["index"] = out3["index"]
+    output["index"] = out1["index"]
 
     return output
 
@@ -97,24 +94,14 @@ def Program_ID(j):
     children = []
     # complete
     out1 = Match(Token_type.Program, j)
-    out2 = Match(Token_type.Identifier, out1["index"])
-    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out1["node"])
 
-    if out1:
-        children.append(out1["node"])
-        if out2:
-            children.append(out2["node"])
-        else:
-            outE2 = "error"
-            children.append(outE2["node"])
-        if out3:
-            children.append(out3["node"])
-        else:
-            outE3 = "error"
-            children.append(outE3["node"])
-    else:
-        out = "empty"
-        children.append(out["node"])
+    out2 = Match(Token_type.Identifier, out1["index"])
+    children.append(out2["node"])
+
+    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out3["node"])
+
 
     Node = Tree("Program_ID", children)
     output["node"] = Node
@@ -127,24 +114,13 @@ def Uses(j):
     children = []
     # complete
     out1 = Match(Token_type.Uses, j)
-    out2 = Match(Token_type.Identifier, out1["index"])
-    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out1["node"])
 
-    if out1:
-        children.append(out1["node"])
-        if out2:
-            children.append(out2["node"])
-        else:
-            outE2 = "error"
-            children.append(outE2["node"])
-        if out3:
-            children.append(out3["node"])
-        else:
-            outE3 = "error"
-            children.append(outE3["node"])
-    else:
-        out = "empty"
-        children.append(out["node"])
+    out2 = Match(Token_type.Identifier, out1["index"])
+    children.append(out2["node"])
+
+    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out3["node"])
 
     Node = Tree("Uses", children)
     output["node"] = Node
@@ -157,24 +133,14 @@ def Declaration(j):
     children = []
     # complete
     out1 = Match(Token_type.Function, j)
-    out2 = Match(Token_type.Identifier, out1["index"])
-    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out1["node"])
 
-    if out1:
-        children.append(out1["node"])
-        if out2:
-            children.append(out2["node"])
-        else:
-            outE2 = "error"
-            children.append(outE2["node"])
-        if out3:
-            children.append(out3["node"])
-        else:
-            outE3 = "error"
-            children.append(outE3["node"])
-    else:
-        out = "empty"
-        children.append(out["node"])
+    out2 = Match(Token_type.Identifier, out1["index"])
+    children.append(out2["node"])
+
+    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out3["node"])
+
 
     Node = Tree("Declaration", children)
     output["node"] = Node
@@ -187,24 +153,14 @@ def ProcedureDeclarationSec(j):
     children = []
     # complete
     out1 = Match(Token_type.Procedure, j)
-    out2 = Match(Token_type.Identifier, out1["index"])
-    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out1["node"])
 
-    if out1:
-        children.append(out1["node"])
-        if out2:
-            children.append(out2["node"])
-        else:
-            outE2 = "error"
-            children.append(outE2["node"])
-        if out3:
-            children.append(out3["node"])
-        else:
-            outE3 = "error"
-            children.append(outE3["node"])
-    else:
-        out = "empty"
-        children.append(out["node"])
+    out2 = Match(Token_type.Identifier, out1["index"])
+    children.append(out2["node"])
+
+    out3 = Match(Token_type.Semicolon, out2["index"])
+    children.append(out3["node"])
+
 
     Node = Tree("ProcedureDeclarationSec", children)
     output["node"] = Node
@@ -212,27 +168,27 @@ def ProcedureDeclarationSec(j):
 
     return output
 
-# def Statements(j):
-#     output = dict()
-#     children = []
-#
-#     current = Tokens[j].to_dict()
-#
-#     if (current['token type'] == Token_type.Read):
-#         readOutput= Match(Token_type.Read, j)
-#         children.append(readOutput['node '])
-#
-#         identifierOutput = Match(Token_type.Identifier, readOutput['index'])
-#         children.append(identifierOutput['node'])
-#     else:
-#         writeOutput = Match(Token_type.Write,j)
-#         children.append(writeOutput['node'])
-#         identifierOutput = Match(Token_type. Identifier, writeOutput['index'])
-#         children.append(identifierOutput['node'])
-#     Node = Tree('Statements',children)
-#     output["node"] = Node
-#     output["Index"] = identifierOutput["Index"]
-#     return output
+def Statements(j):
+    output = dict()
+    children = []
+
+    current = Tokens[j].to_dict()
+
+    if (current['token type'] == Token_type.Read):
+        readOutput= Match(Token_type.Read, j)
+        children.append(readOutput['node '])
+
+        identifierOutput = Match(Token_type.Identifier, readOutput['index'])
+        children.append(identifierOutput['node'])
+    else:
+        writeOutput = Match(Token_type.Write,j)
+        children.append(writeOutput['node'])
+        identifierOutput = Match(Token_type. Identifier, writeOutput['index'])
+        children.append(identifierOutput['node'])
+    Node = Tree('Statements',children)
+    output["node"] = Node
+    output["Index"] = identifierOutput["Index"]
+    return output
 
 def Match(a, j):
     output = dict()
