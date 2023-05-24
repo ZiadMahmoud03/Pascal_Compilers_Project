@@ -2,11 +2,12 @@ import tkinter as tk
 from enum import Enum
 import re
 import pandas
+import time
 from Constants import *
 from Util import *
 
 class token:
-    def _init_(self, lex, token_type):
+    def __init__(self, lex, token_type):
         self.lex = lex
         self.token_type = token_type
 
@@ -15,7 +16,6 @@ class token:
             'Lex': self.lex,
             'token_type': self.token_type
         }
-
 
 Tokens = []  # to add tokens to list
 
@@ -62,36 +62,47 @@ def find_token(text):
 
 # GUI
 root = tk.Tk()
+root.title("Scanner Phase")
+root.geometry("600x500")
 
-canvas1 = tk.Canvas(root, width=400, height=300, relief='raised')
+# Styling
+root.configure(bg="#1E1E1E")
+canvas1 = tk.Canvas(root, width=600, height=500, relief='raised', bg="#1E1E1E")
 canvas1.pack()
 
-label1 = tk.Label(root, text='Scanner Phase')
-label1.config(font=('helvetica', 14))
-canvas1.create_window(200, 25, window=label1)
+label1 = tk.Label(root, text='Scanner Phase', font=('Arial', 20, 'bold'), fg='#FFFFFF', bg="#1E1E1E")
+canvas1.create_window(300, 50, window=label1)
 
-label2 = tk.Label(root, text='Source code:')
-label2.config(font=('helvetica', 10))
-canvas1.create_window(200, 100, window=label2)
+label2 = tk.Label(root, text='Source code:', font=('Arial', 14), fg='#FFFFFF', bg="#1E1E1E")
+canvas1.create_window(300, 120, window=label2)
 
-entry1 = tk.Entry(root)
-canvas1.create_window(200, 140, window=entry1)
+entry1 = tk.Entry(root, font=('Arial', 12), width=40)
+canvas1.create_window(300, 160, window=entry1)
 
+token_box = tk.Text(root, font=('Arial', 12), width=40, height=15, bg='#FFFFFF')
+token_box.tag_configure("bold", font=('Arial', 12, 'bold'))
+canvas1.create_window(300, 350, window=token_box)
 
 def scan():
-    x1 = '[1,2,3,4,5]'
+    x1 = entry1.get()  # Get the value entered by the user
     uppercase_text = x1.upper()
     find_token(uppercase_text)
     df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
     print(df)
-    label3 = tk.Label(root, text='Lexem ' + x1 + ' is:', font=('helvetica', 10))
-    canvas1.create_window(200, 210, window=label3)
 
-    label4 = tk.Label(root, text="Token_type" + x1, font=('helvetica', 10, 'bold'))
-    canvas1.create_window(200, 230, window=label4)
+    # Clear token box
+    token_box.delete('1.0', tk.END)
 
+    # Output all tokens with animation
+    delay = 0.5  # Delay between displaying tokens
+    for i, token in enumerate(Tokens):
+        token_box.insert(tk.END, f"Token {i + 1}: ", "bold")
+        token_box.insert(tk.END, f"{token.lex} ({token.token_type})\n")
+        token_box.see(tk.END)  # Scroll to the end
+        root.update()  # Update the window
+        time.sleep(delay)
 
-button1 = tk.Button(text='Scan', command=Scan, bg='brown', fg='white', font=('helvetica', 9, 'bold'))
-canvas1.create_window(200, 180, window=button1)
+button1 = tk.Button(text='Scan', command=scan, bg='#FF6600', fg='#FFFFFF', font=('Arial', 12, 'bold'))
+canvas1.create_window(300, 190, window=button1)
 
 root.mainloop()
