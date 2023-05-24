@@ -1,4 +1,4 @@
-from Dfa import draw_dfa_from_input
+from Dfa import *
 import tkinter as tk
 from enum import Enum
 import re
@@ -87,7 +87,7 @@ canvas1.create_window(300, 350, window=token_box)
 def scan():
     x1 = entry1.get()  # Get the value entered by the user
     uppercase_text = x1.upper()
-    draw_dfa_from_input(x1)
+    draw_dfa_from_input(uppercase_text)
     find_token(uppercase_text)
     df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
     print(df)
@@ -106,9 +106,6 @@ def scan():
 
 button1 = tk.Button(text='Scan', command=scan, bg='#FF6600', fg='#FFFFFF', font=('Arial', 12, 'bold'))
 canvas1.create_window(300, 190, window=button1)
-
-
-
 
 
 root.mainloop()
