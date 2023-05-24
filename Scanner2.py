@@ -5,9 +5,8 @@ import pandas
 from Constants import *
 from Util import *
 
-# class token to hold string and token type
 class token:
-    def __init__(self, lex, token_type):
+    def _init_(self, lex, token_type):
         self.lex = lex
         self.token_type = token_type
 
@@ -23,16 +22,24 @@ Tokens = []  # to add tokens to list
 
 def find_token(text):
     # Split text into list of lexemes
-    lexemes = re.findall('\w+|<=|>=|==|<>|\{\*|\*\}|\{\*\}\}|[\.\;\,\:\=\+\-\*\/\<\>\(\)\{\}\'\[\]]', text)
+    lexemes = re.findall('\w+|<=|>=|==|<>|\{\|\\}|\{\\}\}|[\.\;\,\:\=\+\-\\/\<\>\(\)\{\}\'\[\]]', text)
     # Process each lexeme and create a token
     inside_comment = False
     for lex in lexemes:
         if inside_comment:
-            if lex == "}" or lex == "*}":
+            if lex == '}' or lex == '*}':
                 inside_comment = False
-                Tokens.append(token(lex, Token_type.Comments))
+                Tokens.append(token(lex, Comments[lex]))
+            else:
+                Tokens.append(token(lex, Token_type.Comment))
         else:
-            if lex.upper() in ReservedWords:
+            if lex in Comments:
+                if lex != '{' and lex != '{*':
+                    Tokens.append(token(lex, Comments[lex]))
+                elif lex == '{' or lex == '{*':
+                    inside_comment = True
+                    Tokens.append(token(lex, Comments[lex]))
+            elif lex.upper() in ReservedWords:
                 Tokens.append(token(lex, ReservedWords[lex]))
             elif lex.upper() in Constants:
                 Tokens.append(token(lex, Constants[lex]))
@@ -42,11 +49,6 @@ def find_token(text):
             elif lex in RelationalOperators:
                 Tokens.append(token(lex, RelationalOperators[lex]))
                 # Check if the lexeme is an identifier
-            elif lex in Comments and (lex != "}" and lex != "*}" and lex != "{" and lex != "{*"):
-                Tokens.append(token(lex, Comments[lex]))
-            elif lex in Comments and lex == "{" or lex == "{*":
-                inside_comment = True
-                Tokens.append(token(lex, Comments[lex]))
             elif re.match("^[a-zA-Z][a-zA-Z0-9]*$", lex):
                 Tokens.append(token(lex, Token_type.Identifier))
                 # Check if the lexeme is a constant
@@ -56,8 +58,6 @@ def find_token(text):
             else:
                 Tokens.append(token(lex, Token_type.Error))
             pass
-
-    return Tokens
 
 
 # GUI
@@ -78,9 +78,10 @@ entry1 = tk.Entry(root)
 canvas1.create_window(200, 140, window=entry1)
 
 
-def Scan():
-    x1 = entry1.get()
-    find_token(x1)
+def scan():
+    x1 = '[1,2,3,4,5]'
+    uppercase_text = x1.upper()
+    find_token(uppercase_text)
     df = pandas.DataFrame.from_records([t.to_dict() for t in Tokens])
     print(df)
     label3 = tk.Label(root, text='Lexem ' + x1 + ' is:', font=('helvetica', 10))
