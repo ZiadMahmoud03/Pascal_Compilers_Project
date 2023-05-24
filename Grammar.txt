@@ -1,20 +1,18 @@
 ------------------------------------------------------------------------------------------------------------------------
-Program -> Heading DeclarationSec Execution
+Program -> Heading DeclarationSec Execution $
 
 ----------------------------------------------------Heading-------------------------------------------------------------
 Heading -> ProgramID Uses
 ProgramID -> program identifier ;
 Uses -> uses PackageList ; | ε
-PackageList -> Package PackageList'
-PackageList' -> , Package PackageList' | ε
+PackageList -> Identifier PackageList'
+PackageList' -> , Identifier PackageList | ε
 
 --------------------------------------------------DeclarationSec--------------------------------------------------------
-DeclarationSec -> Declaration ProcedureDeclarationSec
-Declaration -> DeclarationType | ε
-DeclarationType -> VarDecl |  ConstDecl |  TypeDecl
+DeclarationSec -> ConstDecl TypeDecl VarDecl FunctionDec ProcedureDec
 
 VarDecl → var VarDecl'
-VarDecl' → VarIdList VarDecl2 : Datatype;
+VarDecl' → VarIdList VarDecl2 : Datatype; VarDecl2
 VarDecl2 → VarDecl' | ε
 
 ConstDecl -> const ConstDecl'
@@ -22,8 +20,9 @@ ConstDecl' -> Identifier = Constant; ConstDecl2
 ConstDecl2 -> ConstDecl' | ε
 
 TypeDecl -> type TypeDecl'
-TypeDecl' -> TypeIdList TypeDecl2 = DataType;
+TypeDecl' -> TypeIdList TypeDecl2 = DataType; TypeDecl2
 TypeDecl2 -> , TypeDecl' | ε
+
 
 ProcedureDeclarationSec -> ProcedureDec FunctionDec | FunctionDec ProcedureDec | FunctionDec | ProcedureDec | ε
 
@@ -134,6 +133,6 @@ AddMinusOp -> + |-
 ModOperator -> mod
 
 DataType -> integer | real | char | string | Boolean
-Constant -> constant | string | boolean | char| integer | nil
+Constant -> integer | real | string | true | false
 
 Comment -> { Expression } | {* Expression *}
