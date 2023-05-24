@@ -1,13 +1,12 @@
-
 from Constants  import *
 from tokenizer  import *
 from enum import Enum
 import graphviz
 import os
-
+mylist = r'\w+|<=|>=|==|<>|{|}|{|}|[|]|.;,:=+-\/<>()' '[a-zA-Z0-9]'
 
 def create_relational_operator_dfa(user_input):
-    mylist = r'\w+|<=|>=|==|<>|{|}|{|}|[|]|.;,:=+-\/<>()' '[a-zA-Z0-9]'
+
     transitions = {}
     accepting_states = set()
     error_state = 'error'
@@ -36,7 +35,6 @@ def create_relational_operator_dfa(user_input):
 
 
 def create_arithmetic_operator_dfa(user_input):
-    mylist = r'\w+|<=|>=|==|<>|{|}|{|}|[|]|.;,:=+-\/<>()' '[a-zA-Z0-9]'
     transitions = {}
     accepting_states = set()
     error_state = 'error'
@@ -65,14 +63,14 @@ def create_arithmetic_operator_dfa(user_input):
 
 
 def create_constant_dfa(user_input):
-    mylist = r'\w+|<=|>=|==|<>|{|}|{|}|[|]|.;,:=+-\/<>()' '[a-zA-Z0-9]'
+
     transitions = {}
     accepting_states = set()
     error_state = 'error'
     initial_state = 0
     current_state = initial_state
 
-    transitions[initial_state] = {mylist[1:]: error_state}
+    transitions[initial_state] = {mylist[1:]: error_state} 
 
     for char in user_input:
         if current_state not in transitions:
@@ -93,12 +91,12 @@ def create_constant_dfa(user_input):
 
 
 def create_reserved_word_dfa(user_input):
-    mylist = r'\w+|<=|>=|==|<>|{|}|{|}|[|]|.;,:=+-\/<>()' '[a-zA-Z0-9]'
     transitions = {}
     accepting_states = set()
     error_state = 'error'
     initial_state = 0
     current_state = initial_state
+
 
     transitions[initial_state] = {mylist[1:]: error_state}  # Add initial error transition
 
@@ -111,6 +109,7 @@ def create_reserved_word_dfa(user_input):
         next_state = current_state + 1
         transitions[current_state][char] = next_state
         current_state = next_state
+
         transitions[current_state] = {mylist: error_state}
 
     # Add the final state as an accepting state with the derived token type
@@ -122,43 +121,15 @@ def create_reserved_word_dfa(user_input):
     return transitions, accepting_states, initial_state
 
 
-def create_combined_dfa(user_input):
-    mylist = r'\w+|<=|>=|==|<>|{|}|{|}|[|]|.;,:=+-\/<>()' '[a-zA-Z0-9]'
-    transitions = {}
-    accepting_states = set()
-    error_state = 'error'
-    initial_state = 0
-
-    current_state = initial_state
-
-    transitions[initial_state] = {mylist[1:]: error_state}
-    for index, char in enumerate(user_input):
-        transitions[current_state] = {mylist: error_state}
-        if current_state not in transitions:
-            transitions[current_state] = {}
-
-        next_state = current_state + 1
-        transitions[current_state][char] = next_state
-        current_state = next_state
-        transitions[current_state] = {mylist: error_state}
-
-    # Add the final state as an accepting state with a token type representing the combined DFA
-    accepting_states.add(current_state)
-    token_type = Token_type.Combined  # Replace with the desired token type for the combined DFA
-    transitions[current_state] = {'': token_type}
-
-    return transitions, accepting_states, initial_state
-
 
 def create_comment_dfa(user_input):
-    mylist = r'\w+|<=|>=|==|<>|{|}|{|}|[|]|.;,:=+-\/<>()' '[a-zA-Z0-9]'
     transitions = {}
-    accepting_states = {2, 5, 9, 11, 12}
+    accepting_states = {2,5,9,11,12}
     initial_state = 0
     error_state = 'error'
     current_state = initial_state
 
-    transitions[initial_state] = {mylist[1:]: error_state}
+    transitions[initial_state] = {mylist[1:]: error_state} 
 
     for char in user_input:
         transitions[current_state] = {mylist: error_state}
@@ -242,42 +213,41 @@ def draw_dfa(transitions, accepting_states, initial_state, format='png'):
     dot.format = 'png'
     dot.render('dfa', cleanup=True)
 
-
 def create_combined_dfa(user_input):
-    transitions = {}
-    initial_state = None
+    transitions = {} 
+    initial_state = None 
     accepting_states = set()
     inside_comment = False
 
     for token in get_tokens(user_input):
         t_transitions, t_accepting_states, t_initial_state = create_dfa(token)
-
-        if t_initial_state is not None:
+       
+        if t_initial_state is not None: 
             if not initial_state:
                 initial_state = t_initial_state
             accepting_states = accepting_states.union(t_accepting_states)
-
+        
             for state, t_transitions in t_transitions.items():
                 if state not in transitions:
                     transitions[state] = {}
-
+                    
                 for input, next_state in t_transitions.items():
-                    if input in transitions and transitions[input] != next_state:
-                        # Conflicting transition, handle here
+                    if input in transitions and transitions[input] != next_state: 
+                        # Conflicting transition, handle here 
                         if not inside_comment:
                             raise Exception('Conflicting transition!')
                     else:
                         transitions[state][input] = next_state
-
+        
             # Add epsilon transitions
             for t_state, t_next_state in t_transitions.items():
                 if t_next_state in t_accepting_states:
-                    transitions[t_state][''] = t_next_state
-
-                    # Check if token opened a multiline comment
+                    transitions[t_state][''] = t_next_state 
+        
+            # Check if token opened a multiline comment
             if token == '{*' and not inside_comment:
                 inside_comment = True
-            # Check if token closed a multiline comment
+            # Check if token closed a multiline comment    
             elif token == '*}' and inside_comment:
                 inside_comment = False
 
@@ -298,7 +268,7 @@ def get_tokens(user_input):
             if token == '*}':
                 inside_comment = False
             else:
-                pass  # Ignore token inside comment
+                pass # Ignore token inside comment
     return tokens
 
 
@@ -314,7 +284,7 @@ def create_dfa(token):
         return create_constant_dfa(token)
     elif token in Comments:
         return create_comment_dfa(token)
-    return {}, set(), None
+    return {}, set(), None 
     # Add logic for strings, identifiers and numbers here
 
 
@@ -323,4 +293,3 @@ def draw_dfa_from_input(user_input):
     draw_dfa(transitions, accepting_states, initial_state, format='png')
     image_path = os.path.abspath('dfa.png')
     os.system(f'start {image_path}')  # Open the image using the default image viewer
-
