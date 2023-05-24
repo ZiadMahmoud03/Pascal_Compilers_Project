@@ -1,8 +1,9 @@
-from Scanner    import *
+
 from Constants  import *
 from tokenizer  import *
 from enum import Enum
 import graphviz
+import os
 
 
 def create_relational_operator_dfa(user_input):
@@ -318,6 +319,8 @@ def create_dfa(token):
 
 
 def draw_dfa_from_input(user_input):
-    transitions, accepting_states, initial_state = create_comment_dfa(user_input)
+    transitions, accepting_states, initial_state = create_combined_dfa(user_input)
     draw_dfa(transitions, accepting_states, initial_state, format='png')
+    image_path = os.path.abspath('dfa.png')
+    os.system(f'start {image_path}')  # Open the image using the default image viewer
 
