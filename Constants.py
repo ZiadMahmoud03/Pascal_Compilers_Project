@@ -79,6 +79,7 @@ class Token_type(Enum):  # listing all tokens type
     EqualFalseOp = 75
     ArrayOpenBracket = 76
     ArrayCloseBracket = 77
+    Comment = 78
 
 
 ReservedWords = {
@@ -90,7 +91,7 @@ ReservedWords = {
     "DIV": Token_type.Div,
     "DO": Token_type.Do,
     "DOWNTO": Token_type.Downto,
-    "ElSE": Token_type.Else,
+    "ELSE": Token_type.Else,
     "END": Token_type.End,
     "FILE": Token_type.File,
     "FOR": Token_type.For,
