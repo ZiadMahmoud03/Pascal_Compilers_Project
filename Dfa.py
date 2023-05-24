@@ -1,8 +1,9 @@
 from Constants  import *
-from tokenizer  import *
+from Tokenizer  import *
 from enum import Enum
 import graphviz
 import os
+import re
 mylist = r'\w+|<=|>=|==|<>|{|}|{|}|[|]|.;,:=+-\/<>()' '[a-zA-Z0-9]'
 
 def create_relational_operator_dfa(user_input):

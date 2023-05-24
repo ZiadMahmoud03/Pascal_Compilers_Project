@@ -42,7 +42,7 @@ def Header():
 
 
 def DeclarationSec():
-    j = 1
+    j = 5
     output = dict()
     Children = []
     Declaration_Dict = Declaration(j)
@@ -147,7 +147,7 @@ def ProcedureDeclarationSec(j):
     out3 = Match(Token_type.Semicolon, out2["index"])
     children.append(out3["node"])
 
-    Node = Tree("ProcedureDeclarationSec", children)
+    Node = Tree("ProcedureDecSec", children)
     output["node"] = Node
     output["index"] = out3["index"]
 

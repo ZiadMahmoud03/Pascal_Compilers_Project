@@ -20,7 +20,7 @@ ConstDecl' -> Identifier = Constant; ConstDecl2
 ConstDecl2 -> ConstDecl' | ε
 
 TypeDecl -> type TypeDecl'
-TypeDecl' -> TypeIdList TypeDecl2 = DataType; TypeDecl2
+TypeDecl' -> TypeIdList TypeDecl2 = DataType;
 TypeDecl2 -> , TypeDecl' | ε
 
 

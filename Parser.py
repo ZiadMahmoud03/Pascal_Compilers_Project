@@ -264,12 +264,10 @@ class RecursiveDescent:
         semicolon_output = self.match(Token_type.Semicolon, data_type_output['index'])
         children.append(semicolon_output['node'])
 
-        typedec2_output = self.typedec2(semicolon_output['index'])
-        children.append(typedec2_output['node'])
 
         Node = Tree('TypeDec', children)
         output["node"] = Node
-        output["index"] = typedec2_output["index"]
+        output["index"] = semicolon_output["index"]
 
         return output
 
